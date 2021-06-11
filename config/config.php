@@ -1,3 +1,5 @@
 <?php
 
-    $BASE_URL = 'http://localhost/skripsi/';
+    $BASE_URL = 'http://localhost/seleksiskripsi/';
+
+    

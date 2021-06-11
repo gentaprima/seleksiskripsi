@@ -1,10 +1,7 @@
 
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
-<!-- <p style="display: none;" id="pesan"></p>
-<p style="display: none;" id="type"></p>
-<p  style="display: none;" id="title"></p> -->
-  <!-- Navbar -->
+
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
@@ -39,3 +36,8 @@
     </ul>
   </nav>
   <!-- /.navbar -->
+  
+  <p style="display: none;" id="pesan"></p>
+  <p style="display: none;" id="type"></p>
+  <p  style="display: none;" id="title"></p> 
+  <!-- Navbar
