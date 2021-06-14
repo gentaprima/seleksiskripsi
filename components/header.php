@@ -1,4 +1,4 @@
-<?php session_start() ?>
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,4 +33,14 @@
   <link rel="stylesheet" href="<?= $BASE_URL?>assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <style>
+    .swal-text{
+      text-align: center;
+    }
+    .bg-white{
+      background-color: #FFF;
+      border: none;
+      border-radius: 10px;
+    }
+  </style>
 </head>

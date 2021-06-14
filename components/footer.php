@@ -108,16 +108,19 @@
 <script src="<?= $BASE_URL?>assets/alert.js"></script>
 <script src="<?= $BASE_URL?>assets/penyewa.js"></script>
 <script src="<?= $BASE_URL?>assets/home/transaksi.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 <script>
-   pesan = document.getElementById('pesan');
-   if (pesan != null) {
-     swal({
-       title: document.getElementById('title').innerHTML,
-       text: pesan.innerHTML,
-       icon: document.getElementById('type').innerHTML,
-     });
-   }
+    let message = document.getElementById('message');
+    if (message != null) {
+      let title = document.getElementById('title').innerHTML;
+      let type = document.getElementById('type').innerHTML;
+      swal({
+        title: title,
+        text: message.innerHTML,
+        icon: type,
+      });
+    }
  </script>
  <script>
   $(function() {
