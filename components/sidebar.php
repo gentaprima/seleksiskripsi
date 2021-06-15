@@ -3,7 +3,7 @@ function active($currect_page)
 {
   $url_array =  explode('/', $_SERVER['REQUEST_URI']);
   $url = end($url_array);
-  
+
   if ($currect_page == $url) {
     echo 'active'; //class name in css 
   }
@@ -23,7 +23,7 @@ function active($currect_page)
   <div class="sidebar">
     <!-- Sidebar user panel (optional) -->
     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-      
+
       <div class="image">
         <img src="<?= $BASE_URL ?>assets/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
       </div>
@@ -46,7 +46,7 @@ function active($currect_page)
           </a>
         </li>
         <li class="nav-item">
-          <a href="<?= $BASE_URL ?>dashboard/profile.php" class="nav-link <?php active("profile.php")?>">
+          <a href="<?= $BASE_URL ?>dashboard/profile.php" class="nav-link <?php active("profile.php") ?>">
             <i class="nav-icon fas fa-table"></i>
             <p>
               Data Diri
@@ -70,7 +70,7 @@ function active($currect_page)
           </a>
         </li>
         <li class="nav-item">
-          <a href="<?= $BASE_URL ?>dashboard/data_merk" class="nav-link">
+          <a href="<?= $BASE_URL ?>dashboard/jadwal-sidang.php" class="nav-link <?php active("jadwal-sidang.php") ?>">
             <i class="nav-icon fas fa-table"></i>
             <p>
               Jadwal Sidang
@@ -78,7 +78,7 @@ function active($currect_page)
           </a>
         </li>
         <li class="nav-header">lain-lain</li>
-        
+
         <li class="nav-item has-treeview menu">
           <a href="<?= $BASE_URL ?>login/logout_process" class="nav-link">
             <i class="nav-icon fas fa-sign-out-alt"></i>

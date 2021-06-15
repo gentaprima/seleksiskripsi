@@ -46,15 +46,32 @@ $dataUsers = getDataRow("SELECT * FROM tbl_users WHERE email = '$emailUsers'", $
             <!-- Small boxes (Stat box) -->
             <div class="row">
                 <div class="col-12">
-                    <div class="bg-white shadow p-4">
+                    <div class="bg-white shadow p-5">
                         <h4 style="color:#002171;font-weight:bold;font-size:18px;width:100%;">Judul Skripsi apa yang ingin Anda Cari ?</h4>
                         <div class="input-group mb-3 mt-3">
-                            <input style="background-color: #f2f4f6;border: 0;" type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+                            <input style="background-color: #f2f4f6;border: 0;" type="text" class="form-control" placeholder="Cari Jurnal" aria-label="Cari Jurnal" aria-describedby="basic-addon1">
                             <div class="input-group-prepend">
                                 <span style="background-color: #f2f4f6;border: 0;" class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
                             </div>
                         </div>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10px">#</th>
+                                    <th>Judul Skripsi</th>
+                                    <th>Jurnal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1.</td>
+                                    <td>Sistem Informasi bla bla bla berak</td>
+                                    <td><a class="badge text-primary">Download Jurnal</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
+
                 </div>
             </div>
             <!-- /.row (main row) -->
