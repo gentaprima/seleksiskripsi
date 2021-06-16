@@ -4,18 +4,18 @@
 <?php include '../components/navbar.php' ?>
 <?php include '../components/sidebar.php' ?>
 <?php include '../proccess/users.php' ?>
-<?php 
-    if(isset($_POST['submit_profile'])){
-        changeProfile($_POST,$_FILES,$conn,$BASE_URL);
-    }
+<?php
+if (isset($_POST['submit_profile'])) {
+    changeProfile($_POST, $_FILES, $conn, $BASE_URL);
+}
 
-    if(isset($_POST['submit_password'])){
-        changePassword($_POST,$conn,$BASE_URL);
-    }
-    $emailUsers = $_SESSION['users_data']['email'];
-    $dataUsers = getDataRow("SELECT * FROM tbl_users WHERE email = '$emailUsers'",$conn);
-   
-    
+if (isset($_POST['submit_password'])) {
+    changePassword($_POST, $conn, $BASE_URL);
+}
+$emailUsers = $_SESSION['users_data']['email'];
+$dataUsers = getDataRow("SELECT * FROM tbl_users WHERE email = '$emailUsers'", $conn);
+
+
 
 ?>
 
@@ -45,13 +45,13 @@
         <div class="container-fluid">
             <!-- Small boxes (Stat box) -->
             <div class="row">
-                <div class="col-md-4 col-sm-6 col-12">
-                    <div class="info-box">
-                        <div class="mr-auto ml-auto p-3">
-                            <?php if($dataUsers['image'] == null){ ?>
-                            <img style="width: 150px; height:150px" src="<?= $BASE_URL ?>assets/image/user.png" alt="">
-                            <?php }else{ ?>
-                            <img style="width: 150px; height:150px" src="<?= $BASE_URL ?>assets/image/<?= $dataUsers['image'] ?>" alt="">
+                <div class="col-md-4 col-sm-12 col-12">
+                    <div class="info-box p-3">
+                        <div class="col-sm-12 justify-content-center">
+                            <?php if ($dataUsers['image'] == null) { ?>
+                                <img class="d-block mx-auto"  style="width: 150px; height:150px" src="<?= $BASE_URL ?>assets/image/user.png" alt="">
+                            <?php } else { ?>
+                                <img style="width: 150px; height:150px" src="<?= $BASE_URL ?>assets/image/<?= $dataUsers['image'] ?>" alt="">
                             <?php } ?>
                             <h4 class="text-center mt-2 text-uppercase"><?= $dataUsers['first_name'] ?> <?= $dataUsers['last_name'] ?></h4>
                             <h6 class="text-center ">Teknik Informatika</h6>
@@ -92,10 +92,10 @@
                                             <label for="" class="col-sm-2">Angkatan</label>
                                             <div class="col-sm-10">
                                                 <select name="angkatan" required class="form-control">
-                                                    <?php if($dataUsers['angkatan'] == null){ ?>
-                                                    <option value="">-- Pilih Angkatan --</option>
-                                                    <?php }else{ ?>
-                                                    <option value="<?= $dataUsers['angkatan'] ?>"><?= $dataUsers['angkatan'] ?></option>
+                                                    <?php if ($dataUsers['angkatan'] == null) { ?>
+                                                        <option value="">-- Pilih Angkatan --</option>
+                                                    <?php } else { ?>
+                                                        <option value="<?= $dataUsers['angkatan'] ?>"><?= $dataUsers['angkatan'] ?></option>
                                                     <?php } ?>
                                                     <option value="<?= date('Y') ?>"><?= date('Y') ?></option>
                                                     <option value="2020">2020</option>
@@ -114,10 +114,10 @@
                                             <label for="" class="col-sm-2">Jenis Kelamin</label>
                                             <div class="col-sm-10">
                                                 <select name="jk" required class="form-control">
-                                                <?php if($dataUsers['angkatan'] == null){ ?>
-                                                    <option value="">-- Pilih Jenis Kelamin --</option>
-                                                    <?php }else{ ?>
-                                                    <option value="<?= $dataUsers['jk'] ?>"><?= $dataUsers['jk'] ?></option>
+                                                    <?php if ($dataUsers['angkatan'] == null) { ?>
+                                                        <option value="">-- Pilih Jenis Kelamin --</option>
+                                                    <?php } else { ?>
+                                                        <option value="<?= $dataUsers['jk'] ?>"><?= $dataUsers['jk'] ?></option>
                                                     <?php } ?>
                                                     <option value="Laki-laki">Laki-laki</option>
                                                     <option value="Perempuan">Perempuan</option>

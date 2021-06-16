@@ -4,6 +4,7 @@
 <?php include '../components/navbar.php' ?>
 <?php include '../components/sidebar.php' ?>
 <?php include '../proccess/users.php' ?>
+<?php include '../proccess/judul_skripsi.php' ?>
 <?php
 if (isset($_POST['submit_profile'])) {
     changeProfile($_POST, $_FILES, $conn, $BASE_URL);
@@ -14,9 +15,10 @@ if (isset($_POST['submit_password'])) {
 }
 $emailUsers = $_SESSION['users_data']['email'];
 $dataUsers = getDataRow("SELECT * FROM tbl_users WHERE email = '$emailUsers'", $conn);
-
-
-
+$dataSkripsi = fetchJudulSkripsi($conn, $limit, $endNumber);
+$countAllData = fetchAllJudulSkripsi($conn);
+$totalPage =  ceil($countAllData / $endNumber);
+$num = $limit + 1;
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -63,13 +65,37 @@ $dataUsers = getDataRow("SELECT * FROM tbl_users WHERE email = '$emailUsers'", $
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1.</td>
-                                    <td>Sistem Informasi bla bla bla berak</td>
-                                    <td><a class="badge text-primary">Download Jurnal</a></td>
-                                </tr>
+                                <?php
+
+                                foreach ($dataSkripsi as $skripsi) { ?>
+                                    <tr>
+                                        <td><span style="font-size: 13px;"><?= $num++ ?></span></td>
+                                        <td><span style="font-size: 13px;"><?= strtoupper($skripsi['judul_skripsi']) ?></span></td>
+                                        <td><a class="badge text-primary" style="font-size: 13px;">Download Jurnal</a></td>
+                                    </tr>
+                                <?php
+                                } ?>
                             </tbody>
                         </table>
+                        <ul class="pagination justify-content-start">
+                            <li class="page-item">
+                                <a class="page-link" style="font-size: 13px;" <?php if ($page > 1) {
+                                                                                    echo "href='?page=$previous'";
+                                                                                } ?>>Previous</a>
+                            </li>
+                            <?php
+                            for ($x = 1; $x <= $totalPage; $x++) {
+                            ?>
+                                <li class="page-item <?= $x == $page ? "active" : "" ?>"><a class="page-link" style="font-size: 13px;" href="?page=<?php echo $x ?>"><?php echo $x; ?></a></li>
+                            <?php
+                            }
+                            ?>
+                            <li class="page-item">
+                                <a class="page-link" style="font-size: 13px;" <?php if ($page < $totalPage) {
+                                                                                    echo "href='?page=$next'";
+                                                                                } ?>>Next</a>
+                            </li>
+                        </ul>
                     </div>
 
                 </div>
