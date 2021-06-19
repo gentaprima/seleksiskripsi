@@ -7,8 +7,9 @@
 <?php include '../proccess/judul_skripsi.php' ?>
 <?php include '../proccess/pembimbing.php' ?>
 <?php
+$persentaseKemiripan = 0;
 if (isset($_POST['submit_add_skripsi'])) {
-    addJudulSkripsi($conn, $BASE_URL);
+    // $persentaseKemiripan = (int)addJudulSkripsi($conn, $BASE_URL);
 }
 $emailUsers = $_SESSION['users_data']['email'];
 $dataUsers = getDataRow("SELECT * FROM tbl_users WHERE email = '$emailUsers'", $conn);
@@ -87,6 +88,9 @@ $dataPembimbing = fetchPembimbing($conn);
                                     <input name="proposal" type="file" class="custom-file-input" id="inputGroupFile04" style="background-color: #f2f4f6;border: 0;">
                                     <label class="custom-file-label" for="inputGroupFile04" style="background-color: #f2f4f6;border: 0;">Upload Proposal</label>
                                 </div>
+                            </div>
+                            <div class="input-group mb-4">
+                                <label for=""><?= $persentaseKemiripan != null ? $persentaseKemiripan : null ?></label>
                             </div>
                             <div class="row" style="margin-left: 0.1%;">
                                 <button type="submit" name="submit_add_skripsi" class="btn btn-primary mb-1 mr-4" style="min-width: 10%;max-width:50%"><i class="fa fa-save"><br>Simpan</i></button>

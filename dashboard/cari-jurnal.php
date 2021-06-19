@@ -8,22 +8,11 @@
 <?php include '../proccess/test.php' ?>
 <?php
 
-
-if (isset($_POST['submit_profile'])) {
-    changeProfile($_POST, $_FILES, $conn, $BASE_URL);
+$dataSkripsi = null;
+$percent = 0;
+if (isset($_POST['search'])) {
+    $dataSkripsi = searchJudulSkripsi($conn, $BASE_URL);
 }
-
-if (isset($_POST['submit_password'])) {
-    changePassword($_POST, $conn, $BASE_URL);
-}
-
-
-$emailUsers = $_SESSION['users_data']['email'];
-$dataUsers = getDataRow("SELECT * FROM tbl_users WHERE email = '$emailUsers'", $conn);
-$dataSkripsi = fetchJudulSkripsi($conn, $limit, $endNumber);
-$countAllData = fetchAllJudulSkripsi($conn);
-$totalPage =  ceil($countAllData / $endNumber);
-$num = $limit + 1;
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -55,52 +44,47 @@ $num = $limit + 1;
                 <div class="col-12">
                     <div class="bg-white shadow p-5">
                         <h4 style="color:#002171;font-weight:bold;font-size:18px;width:100%;">Judul Skripsi apa yang ingin Anda Cari ?</h4>
-                        <div class="input-group mb-3 mt-3">
-                            <input style="background-color: #f2f4f6;border: 0;" type="text" class="form-control" placeholder="Cari Jurnal" aria-label="Cari Jurnal" aria-describedby="basic-addon1">
-                            <div class="input-group-prepend">
-                                <span style="background-color: #f2f4f6;border: 0;" class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+                        <form action="cari-jurnal.php" method="post">
+                            <div class="input-group mb-3 mt-3">
+                                <input name="judul_skripsi" style="background-color: #f2f4f6;border: 0;" type="text" class="form-control" placeholder="Cari Jurnal" aria-label="Cari Jurnal" aria-describedby="basic-addon1">
+                                <div class="input-group-prepend">
+                                    <button type="submit" name="search" style="background-color: #f2f4f6;border: 0;" class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></button>
+                                </div>
                             </div>
-                        </div>
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th style="width: 10px">#</th>
-                                    <th>Judul Skripsi</th>
-                                    <th>Jurnal</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-
-                                foreach ($dataSkripsi as $skripsi) { ?>
+                        </form>
+                        <?php if (!empty($dataSkripsi)) { ?>
+                            <table class="table table-bordered">
+                                <thead>
                                     <tr>
-                                        <td><span style="font-size: 13px;"><?= $num++ ?></span></td>
-                                        <td><span style="font-size: 13px;"><?= strtoupper($skripsi['judul_skripsi']) ?></span></td>
-                                        <td><a class="badge text-primary" style="font-size: 13px;">Download Jurnal</a></td>
+                                        <th style="width: 10px">#</th>
+                                        <th>Judul Skripsi</th>
+                                        <th>Kategori</th>
+                                        <th>kemiripan</th>
+                                        <th>Jurnal</th>
                                     </tr>
-                                <?php
-                                } ?>
-                            </tbody>
-                        </table>
-                        <ul class="pagination justify-content-start">
-                            <li class="page-item">
-                                <a class="page-link" style="font-size: 13px;" <?php if ($page > 1) {
-                                                                                    echo "href='?page=$previous'";
-                                                                                } ?>>Previous</a>
-                            </li>
-                            <?php
-                            for ($x = 1; $x <= $totalPage; $x++) {
-                            ?>
-                                <li class="page-item <?= $x == $page ? "active" : "" ?>"><a class="page-link" style="font-size: 13px;" href="?page=<?php echo $x ?>"><?php echo $x; ?></a></li>
-                            <?php
-                            }
-                            ?>
-                            <li class="page-item">
-                                <a class="page-link" style="font-size: 13px;" <?php if ($page < $totalPage) {
-                                                                                    echo "href='?page=$next'";
-                                                                                } ?>>Next</a>
-                            </li>
-                        </ul>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $num = 0;
+                                    foreach ($dataSkripsi as $skripsi) {
+                                        similar_text(strtoupper($skripsi['judul_skripsi']), $_POST['judul_skripsi'], $percent);
+                                    ?>
+                                        <tr>
+                                            <td><span style="font-size: 13px;"><?= $num++ ?></span></td>
+                                            <td><span style="font-size: 13px;"><?= strtoupper($skripsi['judul_skripsi']) ?></span></td>
+                                            <td><a class="badge text-primary" style="font-size: 13px;"><?= $skripsi['label'] ?></a></td>
+                                            <?php if ((int) $percent >= 75) { ?>
+                                                <td><span class=" bg-danger pl-2 rounded pr-2 pt-1 pb-1" style="font-size: 13px;"><?= (int)$percent ?> %</span></td>
+                                            <?php } else { ?>
+                                                <td><span class=" bg-primary pl-2 rounded pr-2 pt-1 pb-1" style="font-size: 13px;"><?= (int)$percent ?> %</span></td>
+                                            <?php } ?>
+                                            <td><a class="badge text-primary" style="font-size: 13px;">Download Jurnal</a></td>
+                                        </tr>
+                                    <?php
+                                    } ?>
+                                </tbody>
+                            </table>
+                        <?php } ?>
                     </div>
 
                 </div>
