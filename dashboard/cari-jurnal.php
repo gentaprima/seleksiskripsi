@@ -46,7 +46,7 @@ if (isset($_POST['search'])) {
                         <h4 style="color:#002171;font-weight:bold;font-size:18px;width:100%;">Judul Skripsi apa yang ingin Anda Cari ?</h4>
                         <form action="cari-jurnal.php" method="post">
                             <div class="input-group mb-3 mt-3">
-                                <input name="judul_skripsi" style="background-color: #f2f4f6;border: 0;" type="text" class="form-control" placeholder="Cari Jurnal" aria-label="Cari Jurnal" aria-describedby="basic-addon1">
+                                <input required name="judul_skripsi" style="background-color: #f2f4f6;border: 0;" type="text" class="form-control" placeholder="Cari Jurnal" aria-label="Cari Jurnal" aria-describedby="basic-addon1">
                                 <div class="input-group-prepend">
                                     <button type="submit" name="search" style="background-color: #f2f4f6;border: 0;" class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></button>
                                 </div>
@@ -67,7 +67,7 @@ if (isset($_POST['search'])) {
                                     <?php
                                     $num = 0;
                                     foreach ($dataSkripsi as $skripsi) {
-                                        similar_text(strtoupper($skripsi['judul_skripsi']), $_POST['judul_skripsi'], $percent);
+                                        similar_text(str_replace(' ', '', strtolower($skripsi['judul_skripsi'])), str_replace(' ', '', strtolower($_POST['judul_skripsi'])), $percent);
                                     ?>
                                         <tr>
                                             <td><span style="font-size: 13px;"><?= $num++ ?></span></td>
