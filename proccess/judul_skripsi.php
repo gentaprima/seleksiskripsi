@@ -5,6 +5,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/seleksiskripsi/vendor/autoload.php';
 use Phpml\Classification\KNearestNeighbors;
 use Phpml\FeatureExtraction\TokenCountVectorizer;
 use Phpml\Tokenization\WhitespaceTokenizer;
+use Phpml\FeatureExtraction\TfIdfTransformer;
+
 //paggination
 $endNumber = 7;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -46,56 +48,62 @@ function stopwordJudul($input)
     return $removeData;
 }
 
-function tokenizerData($data)
+
+function resultSearch($conn, $label)
 {
-    $vectorizer = new TokenCountVectorizer(new WhitespaceTokenizer());
-    $vectorizer->fit($data);
-    $sample = $vectorizer->transform($data);
-    $transformer = new TfIdfTransformer($sample);
-    return $transformer->transform($sample);
+    $query = "SELECT * FROM tbl_judul_skripsi where label = '$label'";
+    $execQuery = mysqli_query($conn, $query);
+    $result = mysqli_fetch_all($execQuery, MYSQLI_ASSOC);
+    return $result;
 }
 
-
-
-function addJudulSkripsi($conn, $BASE_URL)
+function searchJudulSkripsi($conn, $BASE_URL)
 {
-    $judulSkripsi = "Mereka meniru-nirukannya";
+
     $allData = fetchJudulSkripsi($conn, 0, fetchAllJudulSkripsi($conn));
-    // foreach($allData as $sample){
-    //     print_r($sample['judul_skripsi']));
-    // }
-    // $extrackInput = stopwordJudul($judulSkripsi);
-    // $stemmingText = stemmingJudul($extrackInput);
-    // echo($stemmingText);
-    // $classifier = new KNearestNeighbors($k = 4);
 
+    $dataSample = [];
+    $dataLabel = [];
+    foreach ($allData as $sample) {
+        array_push($dataSample, $sample['text_preprocessing']);
+        array_push($dataLabel, $sample['label']);
+    }
+    $dataSample = array_unique($dataSample);
+    $input = [$_POST['judul_skripsi']];
+    $input = stemmingJudul($input[0]);
+    $input = [stopwordJudul($input)];
+    //vectorcount
+    $vectorizer = new TokenCountVectorizer(new WhitespaceTokenizer());
+    $vectorizer->fit($dataSample);
+    $vectorizer->transform($dataSample);
+    $vectorizer->transform($input);
+    // tfidtransform
+    $transformer = new TfIdfTransformer($dataSample);
+    $transformer->transform($dataSample);
+    $transformer->transform($input);
 
-    // $dataJudul = [
-    //     "judul_skripsi" => $_POST['judul_skripsi'],
-    //     "stemming" => "test3",
-    //     "stop_word" => "test3",
-    //     "label" => 0
-    // ];
-
-    // $insertJudul = create($dataJudul, $conn, 'tbl_judul_skripsi');
-    // if ($insertJudul) {
-    //     $_SESSION['message'] = "Berhasil Mendaftar Skripsi, Silahkan Menunggu Konfirmasi Admin";
-    //     $_SESSION['type'] = "success";
-    //     $_SESSION['title'] = "Success";
-    //     Redirect($BASE_URL . 'dashboard/daftar-skripsi.php');
-    // } else {
-    //     $_SESSION['message'] = "Mohon maaf , Pendaftaran Sedang Dalam Perbaikan";
-    //     $_SESSION['type'] = "error";
-    //     $_SESSION['title'] = "Warning";
-    //     Redirect($BASE_URL . 'dashboard/daftar-skripsi.php');
-    // }
+    //test prediction
+    $classifier = new KNearestNeighbors(5);
+    $classifier->train($dataSample, $dataLabel);
+    $predict =  $classifier->predict($input)[0];
+    return resultSearch($conn, $predict);
 }
 
-
-
-
-// $endNumber = 7;
-// $dataSkripsi = fetchJudulSkripsi($conn, $page, $limit, $endNumber);
-// $totalDataSkripsi = count($dataSkripsi);
-// // print_r($totalDataSkripsi);die;
-// print_r($totalDataSkripsi);die;
+function addDataSkripsi($conn)
+{
+    $input = [$_POST['judul_skripsi']];
+    $input = stemmingJudul($input[0]);
+    $input = stopwordJudul($input);
+    
+    if (!empty($_POST['judul_skripsi']))
+        $dataJudul = [
+            "judul_skripsi" => $_POST['judul_skripsi'],
+            "text_preprocessing" => $input,
+            "label" => $predict,
+            "proposal" => "test"
+        ];
+    create($dataJudul, $conn, 'tbl_judul_skripsi');
+    $_SESSION['message'] = "Selamat, Judul Skripsi Anda Diterima Oleh Sistem";
+    $_SESSION['type'] = "success";
+    $_SESSION['title'] = "Success";
+}
