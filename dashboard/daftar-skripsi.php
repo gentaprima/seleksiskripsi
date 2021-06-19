@@ -4,17 +4,15 @@
 <?php include '../components/navbar.php' ?>
 <?php include '../components/sidebar.php' ?>
 <?php include '../proccess/users.php' ?>
+<?php include '../proccess/judul_skripsi.php' ?>
+<?php include '../proccess/pembimbing.php' ?>
 <?php
-if (isset($_POST['submit_profile'])) {
-    changeProfile($_POST, $_FILES, $conn, $BASE_URL);
-}
-
-if (isset($_POST['submit_password'])) {
-    changePassword($_POST, $conn, $BASE_URL);
+if (isset($_POST['submit_add_skripsi'])) {
+    addJudulSkripsi($conn, $BASE_URL);
 }
 $emailUsers = $_SESSION['users_data']['email'];
 $dataUsers = getDataRow("SELECT * FROM tbl_users WHERE email = '$emailUsers'", $conn);
-
+$dataPembimbing = fetchPembimbing($conn);
 
 
 ?>
@@ -48,39 +46,54 @@ $dataUsers = getDataRow("SELECT * FROM tbl_users WHERE email = '$emailUsers'", $
                 <div class="col-12">
                     <div class="bg-white shadow p-5">
                         <h4 style="color:#002171;font-weight:bold;font-size:18px;width:100%;">Silahkan Daftar Skripsi disini </h4>
-                        <div class="input-group mb-3 mt-3">
-                            <input style="background-color: #f2f4f6;border: 0;" type="text" class="form-control" placeholder="Judul Skripsi" aria-label="Judul" aria-describedby="basic-addon1">
-                            <div class="input-group-prepend">
-                                <span style="background-color: #f2f4f6;border: 0;" class="input-group-text" id="basic-addon1"><i class="fa fa-book"></i></span>
+                        <form action="daftar-skripsi.php" method="post">
+                            <div class="input-group mb-3 mt-3">
+                                <input name="judul_skripsi" style="background-color: #f2f4f6;border: 0;" type="text" class="form-control" placeholder="Judul Skripsi" aria-label="Judul" aria-describedby="basic-addon1">
+                                <div class="input-group-prepend">
+                                    <span style="background-color: #f2f4f6;border: 0;" class="input-group-text" id="basic-addon1"><i class="fa fa-book"></i></span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="input-group" style="margin-bottom: 1.3%;">
-                            <input style="background-color: #f2f4f6;border: 0;" type="text" class="form-control" placeholder="Studi Kasus" aria-label="kasus" aria-describedby="basic-addon1">
-                            <div class="input-group-prepend">
-                                <span style="background-color: #f2f4f6;border: 0;" class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+                            <div class="input-group" style="margin-bottom: 1.3%;">
+                                <input name="studi_kasus" style="background-color: #f2f4f6;border: 0;" type="text" class="form-control" placeholder="Studi Kasus" aria-label="kasus" aria-describedby="basic-addon1">
+                                <div class="input-group-prepend">
+                                    <span style="background-color: #f2f4f6;border: 0;" class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="input-group" style="margin-bottom: 1.3%;">
-                            <select name="angkatan" required class="form-control" style="background-color: #f2f4f6;border: 0;">
-                                <?php if ($dataUsers['angkatan'] == null) { ?>
-                                    <option value="">-- Dosen Pembimbing --</option>
-                                <?php } else { ?>
-                                    <option value="<?= $dataUsers['angkatan'] ?>"><?= $dataUsers['angkatan'] ?></option>
-                                <?php } ?>
-                                <option style="background-color: #f2f4f6;border: 0;" value="<?= date('Y') ?>"><?= date('Y') ?></option>
-                                <option value="2020">Pak</option>
-                            </select>
-                        </div>
-                        <div class="input-group mb-4">
-                            <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="inputGroupFile04" style="background-color: #f2f4f6;border: 0;">
-                                <label class="custom-file-label" for="inputGroupFile04" style="background-color: #f2f4f6;border: 0;">Upload Proposal</label>
+                            <div class="input-group" style="margin-bottom: 1.3%;">
+                                <select name="angkatan" required class="form-control" style="background-color: #f2f4f6;border: 0;">
+                                    <?php if ($dataUsers['angkatan'] == null) { ?>
+                                        <option value="">-- Angkatan --</option>
+                                    <?php } else { ?>
+                                        <option value="<?= $dataUsers['angkatan'] ?>"><?= $dataUsers['angkatan'] ?></option>
+                                    <?php } ?>
+                                    <option style="background-color: #f2f4f6;border: 0;" value="<?= date('Y') ?>"><?= date('Y') ?></option>
+                                    <option value="2020">Pak</option>
+                                </select>
                             </div>
-                        </div>
-                        <div class="row" style="margin-left: 0.1%;">
-                            <button type="submit" name="submit_profile" class="btn btn-primary mb-1 mr-4" style="min-width: 10%;max-width:50%"><i class="fa fa-save"><br>Simpan</i></button>
-                            <button type="submit" name="submit_profile" class="btn btn-warning mb-1 text-white" style="min-width: 10%;max-width:50%"><i class="fa fa-eraser"><br>Ulang Pengisian</i></button>
-                        </div>
+                            <div class="input-group" style="margin-bottom: 1.3%;">
+                                <select name="pembimbing" required class="form-control" style="background-color: #f2f4f6;border: 0;">
+                                    <option value="">-- Pembimbing --</option>
+                                    <?php
+                                    foreach ($dataPembimbing as $dp) {
+
+                                    ?>
+                                        <option style="background-color: #f2f4f6;border: 0;" value="<?= $dp['id_pembimbing'] ?>"><?= $dp['nama_pembimbing'] ?></option>
+
+                                    <?php } ?>
+                                </select>
+                            </div>
+                            <div class="input-group mb-4">
+                                <div class="custom-file">
+                                    <input name="proposal" type="file" class="custom-file-input" id="inputGroupFile04" style="background-color: #f2f4f6;border: 0;">
+                                    <label class="custom-file-label" for="inputGroupFile04" style="background-color: #f2f4f6;border: 0;">Upload Proposal</label>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-left: 0.1%;">
+                                <button type="submit" name="submit_add_skripsi" class="btn btn-primary mb-1 mr-4" style="min-width: 10%;max-width:50%"><i class="fa fa-save"><br>Simpan</i></button>
+                                <button type="clear" name="submit_profile" class="btn btn-warning mb-1 text-white" style="min-width: 10%;max-width:50%"><i class="fa fa-eraser"><br>Ulang Pengisian</i></button>
+                            </div>
+                        </form>
+
                     </div>
                 </div>
             </div>

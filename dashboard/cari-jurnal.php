@@ -5,7 +5,10 @@
 <?php include '../components/sidebar.php' ?>
 <?php include '../proccess/users.php' ?>
 <?php include '../proccess/judul_skripsi.php' ?>
+<?php include '../proccess/test.php' ?>
 <?php
+
+
 if (isset($_POST['submit_profile'])) {
     changeProfile($_POST, $_FILES, $conn, $BASE_URL);
 }
@@ -13,6 +16,8 @@ if (isset($_POST['submit_profile'])) {
 if (isset($_POST['submit_password'])) {
     changePassword($_POST, $conn, $BASE_URL);
 }
+
+
 $emailUsers = $_SESSION['users_data']['email'];
 $dataUsers = getDataRow("SELECT * FROM tbl_users WHERE email = '$emailUsers'", $conn);
 $dataSkripsi = fetchJudulSkripsi($conn, $limit, $endNumber);

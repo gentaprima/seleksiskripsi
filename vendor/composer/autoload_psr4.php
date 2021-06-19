@@ -6,4 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Phpml\\' => array($vendorDir . '/php-ai/php-ml/src'),
+    'FunctionalPHP\\PatternMatching\\' => array($vendorDir . '/functional-php/pattern-matching/src'),
 );

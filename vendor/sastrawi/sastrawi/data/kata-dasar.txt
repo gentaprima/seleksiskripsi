@@ -12300,6 +12300,7 @@ kecantol
 kecap
 kecapi
 kecar
+kece
 kecebong
 kecek
 kecele

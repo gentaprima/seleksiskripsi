@@ -4,8 +4,117 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9e460f0a0f51db27ec6936c0f209f04b",
+    "content-hash": "f387305325231242d04787f191067c7f",
     "packages": [
+        {
+            "name": "functional-php/pattern-matching",
+            "version": "0.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/functional-php/pattern-matching.git",
+                "reference": "6fab367965fc7d56593b1d7fd859728e4a3a54cd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/functional-php/pattern-matching/zipball/6fab367965fc7d56593b1d7fd859728e4a3a54cd",
+                "reference": "6fab367965fc7d56593b1d7fd859728e4a3a54cd",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6.0"
+            },
+            "require-dev": {
+                "atoum/atoum": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "FunctionalPHP\\PatternMatching\\": "./src"
+                },
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD"
+            ],
+            "authors": [
+                {
+                    "name": "Gilles Crettenand",
+                    "email": "gilles@crettenand.info"
+                }
+            ],
+            "description": "Pattern matching for PHP with automatic destructuring.",
+            "keywords": [
+                "Pattern Matching",
+                "destructuring",
+                "functional",
+                "pattern"
+            ],
+            "support": {
+                "issues": "https://github.com/functional-php/pattern-matching/issues",
+                "source": "https://github.com/functional-php/pattern-matching/tree/master"
+            },
+            "time": "2016-10-26T13:46:53+00:00"
+        },
+        {
+            "name": "php-ai/php-ml",
+            "version": "0.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://gitlab.com/php-ai/php-ml.git",
+                "reference": "fd8b70629e16ed67307fe150ba25738449b9a6b2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.com/api/v4/projects/php-ai%2Fphp-ml/repository/archive.zip?sha=fd8b70629e16ed67307fe150ba25738449b9a6b2",
+                "reference": "fd8b70629e16ed67307fe150ba25738449b9a6b2",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2"
+            },
+            "require-dev": {
+                "phpbench/phpbench": "^0.16.0",
+                "phpstan/phpstan": "^0.12",
+                "phpstan/phpstan-phpunit": "^0.12",
+                "phpstan/phpstan-strict-rules": "^0.12",
+                "phpunit/phpunit": "^8.0",
+                "symplify/easy-coding-standard": "^6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Phpml\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Arkadiusz Kondas",
+                    "email": "arkadiusz.kondas@gmail.com"
+                }
+            ],
+            "description": "PHP-ML - Machine Learning library for PHP",
+            "homepage": "https://github.com/php-ai/php-ml",
+            "keywords": [
+                "Neural network",
+                "artificial intelligence",
+                "computational learning theory",
+                "data science",
+                "feature extraction",
+                "machine learning",
+                "pattern recognition"
+            ],
+            "support": {
+                "issues": "https://gitlab.com/api/v4/projects/19024967/issues"
+            },
+            "time": "2020-05-27T09:52:59+00:00"
+        },
         {
             "name": "sastrawi/sastrawi",
             "version": "v1.2.0",
