@@ -70,7 +70,6 @@ function vectorCount($dataSample)
 {
     $GLOBALS['vectorizer']->fit($dataSample);
     $GLOBALS['vectorizer']->transform($dataSample);
-
     return $dataSample;
 }
 $transformer;
@@ -91,7 +90,6 @@ function processMetode($conn, $input)
         array_push($dataSample, $sample['text_preprocessing']);
         array_push($dataLabel, $sample['label']);
     }
-
 
     $dataSample = vectorCount($dataSample);
     $dataSample = tfIDTransform($dataSample);
@@ -126,6 +124,8 @@ function resultSearchWithPresentase($conn)
     });
     return $resultSearch;
 }
+
+
 
 function addDataSkripsi($conn, $BASE_URL, $id_user)
 {
