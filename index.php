@@ -6,6 +6,10 @@
 if (isset($_POST['submit'])) {
   proccessLogin($_POST, $conn, $BASE_URL);
 }
+if(isset($_SESSION['users_data'])){
+  $link = $BASE_URL.'dashboard';
+  Redirect($link);
+}
 ?>
 <html lang="en">
 

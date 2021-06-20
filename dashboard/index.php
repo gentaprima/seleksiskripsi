@@ -2,6 +2,13 @@
 <?php include '../components/header.php' ?>
 <?php include '../components/navbar.php' ?>
 <?php include '../components/sidebar.php' ?>
+<?php  
+  if($_SESSION['users_data'] == null){
+    
+    Redirect($BASE_URL);
+  }
+
+?>
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -33,7 +40,7 @@
               <span class="info-box-icon"><i class="fas fa-database"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Produk</span>
+                <span class="info-box-text">Mahasiswa</span>
                 <span class="info-box-number">0</span>
 
                 <div class="progress">
@@ -51,7 +58,7 @@
               <span class="info-box-icon"><i class="fas fa-users"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Pelanggan (terdaftar)</span>
+                <span class="info-box-text">Judul Skripsi</span>
                 <span class="info-box-number">0</span>
 
                 <div class="progress">
@@ -69,7 +76,7 @@
               <span class="info-box-icon"><i class="fas fa-box"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Jumlah Tipe Truk</span>
+                <span class="info-box-text">...</span>
                 <span class="info-box-number">0</span>
 
                 <div class="progress">
@@ -87,7 +94,7 @@
               <span class="info-box-icon"><i class="fas fa-truck"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Jumlah Merk</span>
+                <span class="info-box-text">...</span>
                 <span class="info-box-number">0</span>
 
                 <div class="progress">
@@ -109,7 +116,7 @@
               <span class="info-box-icon"><i class="fas fa-money-bill-wave-alt"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Jumlah Pendapatan (perbulan)</span>
+                <span class="info-box-text">...</span>
                 <span class="info-box-number">0</span>
 
                 <div class="progress">
@@ -126,7 +133,7 @@
               <span class="info-box-icon"><i class="fas fa-exchange-alt"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Jumlah Transaksi (perbulan)</span>
+                <span class="info-box-text">...</span>
                 <span class="info-box-number">0</span>
 
                 <div class="progress">
