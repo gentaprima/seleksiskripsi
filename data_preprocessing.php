@@ -6,6 +6,7 @@ use Phpml\FeatureExtraction\TokenCountVectorizer;
 use Phpml\Tokenization\WhitespaceTokenizer;
 use Phpml\FeatureExtraction\TfIdfTransformer;
 use Phpml\Clustering\KMeans;
+
 function stemmingJudul($input)
 {
     $stemmerFactory = new \Sastrawi\Stemmer\StemmerFactory();
@@ -29,8 +30,6 @@ function tokenizerData($samples)
     $vectorizer = new TokenCountVectorizer(new WhitespaceTokenizer());
     $vectorizer->fit($samples);
     $vectorizer->transform($samples);
-
-    // return $vectorizer->getVocabulary()
     return $samples;
 }
 
@@ -41,26 +40,28 @@ function tfidTransform($samples)
     return $samples;
 }
 
+// $fp = fopen("result_data_preprocessing.csv", 'w');
 $row = 1;
 $dataExtract  = [];
 if (($handle = fopen("datasetfull.csv", "r")) !== FALSE) {
-
     while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
         $num = count(array_unique($data));
         $row++;
         for ($c = 0; $c < $num; $c++) {
             $stop = stopwordJudul(strtolower($data[$c]));
-            $ouput = stemmingJudul($stop);
-            array_push($dataExtract, ["judul_skripsi" => $data[$c], "text_preprocessing" => $ouput]);
+            $output = stemmingJudul($stop);
+            array_push($dataExtract, ["judul_skripsi" => $data[$c], "text_preprocessing" => $output]);
         }
     }
     fclose($handle);
+    // fclose($fp);
 }
 
 $judulSkripsi = [];
-
 foreach ($dataExtract as $data) {
     array_push($judulSkripsi, $data['text_preprocessing']);
+    print($data['text_preprocessing']."<br>\n");
+    // fputcsv($fp, $data['text_preprocessing']);
     // $dataJudul = [
     //     "judul_skripsi" =>$data['judul_skripsi'],
     //     "text_preprocessing" => $data['text_preprocessing'],
@@ -71,6 +72,13 @@ foreach ($dataExtract as $data) {
     // $insertJudul = create($dataJudul, $conn, 'tbl_judul_skripsi');
 }
 $resultTextTokenizing = tokenizerData($judulSkripsi);
-$X = tfidTransform($resultTextTokenizing);
-$kmeans = new KMeans(10);
-$result = $kmeans->cluster($X);
+// $X = tfidTransform($resultTextTokenizing);
+// $kmeans = new KMeans(10);
+// $result = $kmeans->cluster($X);
+
+
+//Write fields
+// foreach ($judulSkripsi as $fields) {
+//     // print_r($fields);
+//     fputcsv($fp, $fields);
+// }
