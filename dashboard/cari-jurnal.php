@@ -11,7 +11,7 @@
 $dataSkripsi = null;
 $percent = 0;
 if (isset($_POST['search'])) {
-    $dataSkripsi = searchJudulSkripsi($conn, $BASE_URL);
+    $dataSkripsi = resultSearchWithPresentase($conn);
 }
 ?>
 
@@ -74,11 +74,16 @@ if (isset($_POST['search'])) {
                                             <td><span style="font-size: 13px;"><?= strtoupper($skripsi['judul_skripsi']) ?></span></td>
                                             <td><a class="badge text-primary" style="font-size: 13px;"><?= $skripsi['label'] ?></a></td>
                                             <?php if ((int) $percent >= 75) { ?>
-                                                <td><span class=" bg-danger pl-2 rounded pr-2 pt-1 pb-1" style="font-size: 13px;"><?= (int)$percent ?> %</span></td>
+                                                <td><span class=" bg-danger pl-2 rounded pr-2 pt-1 pb-1" style="font-size: 13px;"><?= $skripsi['presentasi'] ?> %</span></td>
                                             <?php } else { ?>
-                                                <td><span class=" bg-primary pl-2 rounded pr-2 pt-1 pb-1" style="font-size: 13px;"><?= (int)$percent ?> %</span></td>
+                                                <td><span class=" bg-primary pl-2 rounded pr-2 pt-1 pb-1" style="font-size: 13px;"><?= $skripsi['presentasi'] ?> %</span></td>
                                             <?php } ?>
-                                            <td><a class="badge text-primary" style="font-size: 13px;">Download Jurnal</a></td>
+                                            <?php if (!empty($skripsi['proposal'])) { ?>
+                                                <td><a href="<?= $BASE_URL ?>assets/proposal/<?= $skripsi['proposal'] ?>" download="<?= $skripsi['proposal'] ?>" class="badge text-primary" style="font-size: 13px;">Download Jurnal</a></td>
+                                            <?php } else { ?>
+                                                <td><a class="badge text-muted" style="font-size: 13px;">Download Jurnal</a></td>
+
+                                            <?php } ?>
                                         </tr>
                                     <?php
                                     } ?>

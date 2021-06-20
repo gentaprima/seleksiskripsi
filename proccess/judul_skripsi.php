@@ -113,6 +113,20 @@ function searchJudulSkripsi($conn)
     return $resultSearch;
 }
 
+function resultSearchWithPresentase($conn)
+{
+    $resultSearch = searchJudulSkripsi($conn);
+    foreach ($resultSearch as $key => $d) {
+        similar_text(str_replace(' ', '', strtolower($d['judul_skripsi'])), str_replace(' ', '', strtolower($_POST['judul_skripsi'])), $percent);;
+        $d['presentasi'] = (int) $percent;
+        $resultSearch[$key] = $d;
+    }
+    usort($resultSearch, function ($a, $b) {
+        return $b['presentasi'] - $a['presentasi'];
+    });
+    return $resultSearch;
+}
+
 function addDataSkripsi($conn, $BASE_URL, $id_user)
 {
 
@@ -149,7 +163,15 @@ function addDataSkripsi($conn, $BASE_URL, $id_user)
                     "studi_kasus" => $_POST['studi_kasus']
                 ];
                 $ex = create($dataJudul, $conn, 'tbl_judul_skripsi');
-                if ($ex) {
+                $dataPengajuan = [
+                    'id_user' => $id_user,
+                    'id_pembimbing' => $_POST['pembimbing'],
+                    'id_judul' => $conn->insert_id,
+                    'tanggal_pengajuan' => date("Y-m-d"),
+                    'status' => 0
+                ];
+                $insertTablePengajuan = create($dataPengajuan, $conn, 'tb_pengajuan');
+                if ($ex && $insertTablePengajuan) {
                     $_SESSION['message'] = "Selamat, Judul Skripsi Anda Diterima Oleh Sistem";
                     $_SESSION['type'] = "success";
                     $_SESSION['title'] = "Success";
@@ -171,7 +193,7 @@ function addDataSkripsi($conn, $BASE_URL, $id_user)
             Redirect($BASE_URL . 'dashboard/daftar-skripsi.php');
         }
     } else {
-        $_SESSION['message'] = "Mohon maaf, judul skripsi anda sama dengan judul orang lain";
+        $_SESSION['message'] = "Mohon maaf, Judul skripsi anda tidak diterima oleh sistem. silahkan cek di cari jurnal";
         $_SESSION['type'] = "error";
         $_SESSION['title'] = "Warning";
         Redirect($BASE_URL . 'dashboard/daftar-skripsi.php');

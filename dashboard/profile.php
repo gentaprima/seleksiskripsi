@@ -49,9 +49,9 @@ $dataUsers = getDataRow("SELECT * FROM tbl_users WHERE email = '$emailUsers'", $
                     <div class="info-box p-3">
                         <div class="col-sm-12 justify-content-center">
                             <?php if ($dataUsers['image'] == null) { ?>
-                                <img class="d-block mx-auto"  style="width: 150px; height:150px" src="<?= $BASE_URL ?>assets/image/user.png" alt="">
+                                <img class="mx-auto d-block" style="width:auto; height:150px" src="<?= $BASE_URL ?>assets/image/user.png" alt="">
                             <?php } else { ?>
-                                <img style="width: 150px; height:150px" src="<?= $BASE_URL ?>assets/image/<?= $dataUsers['image'] ?>" alt="">
+                                <img class="mx-auto d-block" style="width:auto; height:150px" src="<?= $BASE_URL ?>assets/image/<?= $dataUsers['image'] ?>" alt="">
                             <?php } ?>
                             <h4 class="text-center mt-2 text-uppercase"><?= $dataUsers['first_name'] ?> <?= $dataUsers['last_name'] ?></h4>
                             <h6 class="text-center ">Teknik Informatika</h6>
