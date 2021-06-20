@@ -44,23 +44,25 @@ $dataUsers = getDataRow("SELECT * FROM tbl_users WHERE email = '$emailUsers'", $
     <section class="content">
         <div class="container-fluid">
             <!-- Small boxes (Stat box) -->
-            <div class="row">
+            <div class="row mb-4">
                 <div class="col-md-4 col-sm-12 col-12">
-                    <div class="info-box p-3">
-                        <div class="col-sm-12 justify-content-center">
-                            <?php if ($dataUsers['image'] == null) { ?>
-                                <img class="mx-auto d-block" style="width:auto; height:150px" src="<?= $BASE_URL ?>assets/image/user.png" alt="">
-                            <?php } else { ?>
-                                <img class="mx-auto d-block" style="width:auto; height:150px" src="<?= $BASE_URL ?>assets/image/<?= $dataUsers['image'] ?>" alt="">
-                            <?php } ?>
+                    <div class="bg-white shadow p-3">
+                        <div class="col-sm-12 ">
+                            <div class="d-flex justify-content-center">
+                                <?php if ($dataUsers['image'] == null) { ?>
+                                    <img class="d-block mx-auto" style="width: 150px; height:150px" src="<?= $BASE_URL ?>assets/image/user.png" alt="">
+                                <?php } else { ?>
+                                    <img style="width: 150px; height:150px" src="<?= $BASE_URL ?>assets/image/<?= $dataUsers['image'] ?>" alt="">
+                                <?php } ?>
+                            </div>
                             <h4 class="text-center mt-2 text-uppercase"><?= $dataUsers['first_name'] ?> <?= $dataUsers['last_name'] ?></h4>
                             <h6 class="text-center ">Teknik Informatika</h6>
                         </div>
                     </div>
                     <!-- /.info-box -->
                 </div>
-                <div class="col-md-8 col-sm-12 col-12">
-                    <div class="card card-primary card-outline card-outline-tabs">
+                <div class="col-md-8 col-sm-12 col-12 ">
+                    <div class="bg-white shadow ">
                         <div class="card-header p-0 border-bottom-0">
                             <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
                                 <li class="nav-item">
@@ -77,6 +79,12 @@ $dataUsers = getDataRow("SELECT * FROM tbl_users WHERE email = '$emailUsers'", $
                                 <div class="tab-pane fade active show" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
                                     <form action="" method="post" enctype="multipart/form-data">
                                         <div class="form-group row">
+                                            <label for="" class="col-sm-2">NIM</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" readonly value="<?= $dataUsers['nim'] ?>" name="nim" required class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
                                             <label for="" class="col-sm-2">Nama Depan</label>
                                             <div class="col-sm-10">
                                                 <input type="text" value="<?= $dataUsers['first_name'] ?>" name="first_name" required class="form-control">
@@ -86,6 +94,12 @@ $dataUsers = getDataRow("SELECT * FROM tbl_users WHERE email = '$emailUsers'", $
                                             <label for="" class="col-sm-2">Nama Belakang</label>
                                             <div class="col-sm-10">
                                                 <input type="text" value="<?= $dataUsers['last_name'] ?>" name="last_name" required class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="" class="col-sm-2">Email</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" value="<?= $dataUsers['email'] ?>" name="email" required class="form-control">
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -107,6 +121,21 @@ $dataUsers = getDataRow("SELECT * FROM tbl_users WHERE email = '$emailUsers'", $
                                                     <option value="2014">2014</option>
                                                     <option value="2013">2013</option>
                                                     <option value="2012">2012</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="" class="col-sm-2">Semester</label>
+                                            <div class="col-sm-10">
+                                                <select name="semester" required class="form-control">
+                                                    <?php if ($dataUsers['semester'] == null) { ?>
+                                                        <option value="">-- Pilih Semester --</option>
+                                                    <?php } else { ?>
+                                                        <option value="<?= $dataUsers['semester'] ?>"><?= $dataUsers['semester'] ?></option>
+                                                    <?php } ?>
+                                                    <?php for ($i = 1; $i <= 10; $i++) { ?>
+                                                        <option value="Semester <?= $i ?>">Semester <?= $i ?></option>
+                                                    <?php } ?>
                                                 </select>
                                             </div>
                                         </div>

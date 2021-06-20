@@ -2,13 +2,15 @@
 
 
 
-function addData($data, $conn, $BASE_URL)
-{
+function addData($data, $conn, $BASE_URL){
     $firstName = $data['first_name'];
     $lastName = $data['last_name'];
     $email = $data['email'];
     $password = $data['password'];
     $confirmPassword = $data['confirm_password'];
+    $nim = $data['nim'];
+    $angkatan = $data['angkatan'];
+    $semester = $data['semester'];
 
     if ($firstName != null && $lastName && $email != null && $password != null && $confirmPassword != null) {
         if ($confirmPassword == $password) {
@@ -16,7 +18,7 @@ function addData($data, $conn, $BASE_URL)
             // var_dump($cekDataEmail == null);die;
             if ($cekDataEmail == null) {
                 $hashPassword = password_hash($password, PASSWORD_DEFAULT);
-                $addData = "INSERT INTO tbl_users (first_name,last_name,email,password,role) VALUES('$firstName','$lastName','$email','$hashPassword',0)";
+                $addData = "INSERT INTO tbl_users (first_name,last_name,email,password,role,nim,semester,angkatan) VALUES('$firstName','$lastName','$email','$hashPassword',0,'$nim','$semester','$angkatan')";
                 $execQuery = mysqli_query($conn, $addData);
                 // var_dump($execQuery);die;
                 if (mysqli_affected_rows($conn) == 1) {
@@ -55,15 +57,64 @@ function addData($data, $conn, $BASE_URL)
     }
 }
 
-function getDataRow($query, $conn)
-{
+function updateData($conn,$data,$BASE_URL){
+    $firstName = $data['first_name'];
+    $lastName = $data['last_name'];
+    $jk = $data['jk'];
+    $angkatan = $data['angkatan'];
+    $idUsers = $data['id_users'];
+    if($firstName != null && $lastName != null && $jk != null && $angkatan != null){
+        $data = [
+            'first_name' => $firstName,
+            'last_name' => $lastName,
+            'jk'        => $jk,
+            'angkatan'  => $angkatan
+        ];
+        $where = [
+            'id_users' => $idUsers
+        ];
+
+        $update =  update($data,$where,'tbl_users',$conn);
+        if($update){
+            $_SESSION['message'] = "Data Mahasiswa berhasil diperbarui";
+            $_SESSION['type'] = "success";
+            $_SESSION['title'] = "Sukses";
+            Redirect($BASE_URL.'dashboard/data-mahasiswa.php');
+        }else{
+            $_SESSION['message'] = "Mohon Maaf, terdapat kesalahan saat memperbarui data !";
+            $_SESSION['type'] = "error";
+            $_SESSION['title'] = "Warning";
+            Redirect($BASE_URL.'dashboard/data-mahasiswa.php');
+        }
+
+    }else{
+        $_SESSION['message'] = "Mohon lengkapi data !";
+        $_SESSION['type'] = "error";
+        $_SESSION['title'] = "Warning";
+        Redirect($BASE_URL.'dashboard/data-mahasiswa.php');
+    }
+}
+
+function deleteData($conn,$id,$BASE_URL){
+    $where = [
+        "id_users" => $id
+    ];
+    $delete = delete('tbl_users',$where,$conn);
+    if($delete){
+        $_SESSION['message'] = "Data Mahasiswa berhasil dihapus";
+        $_SESSION['type'] = "success";
+        $_SESSION['title'] = "Sukses";
+        Redirect($BASE_URL.'dashboard/data-mahasiswa.php');
+    }
+}
+
+function getDataRow($query, $conn){
     $execQuery = mysqli_query($conn, $query);
     $data =  mysqli_fetch_assoc($execQuery);
     return $data;
 }
 
-function proccessLogin($data, $conn, $BASE_URL)
-{
+function proccessLogin($data, $conn, $BASE_URL){
     $email = $data['email'];
     $password = $data['password'];
 
@@ -106,12 +157,13 @@ function proccessLogin($data, $conn, $BASE_URL)
     }
 }
 
-function changeProfile($data, $image, $conn, $BASE_URL)
-{
+function changeProfile($data, $image, $conn, $BASE_URL){
     $firstName = $data['first_name'];
     $lastName = $data['last_name'];
     $fullName = $firstName . ' ' . $lastName;
     $angkatan = $data['angkatan'];
+    $semester = $data['semester'];
+    $email = $data['email'];
     $jk = $data['jk'];
     $address = $data['address'];
     $files = $image['image']['name'];
@@ -132,7 +184,9 @@ function changeProfile($data, $image, $conn, $BASE_URL)
                                                 angkatan = '$angkatan',
                                                 jk = '$jk',
                                                 address = '$address',
-                                                image = '$files'
+                                                image = '$files',
+                                                semester = '$semester',
+                                                email = '$email'
                                                 WHERE id_users = '$sessionUsers'";
                 $execQuery = mysqli_query($conn, $query);
                 if ($execQuery) {
@@ -237,9 +291,4 @@ function changePassword($data,$conn,$BASE_URL){
     }
 }
 
-function Redirect($url, $permanent = false)
-{
-    // header('Location: ' . $url, true, $permanent ? 301 : 302);
-    echo "<script>window.location.href = '$url';</script>";
-    exit(0);
-}
+

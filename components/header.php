@@ -49,5 +49,40 @@ if ($_SESSION == null) {
       border: none;
       border-radius: 10px;
     }
+    .color-primary{
+      color: #002171;
+    }
+    #example1_wrapper > .dt-buttons.btn-group.flex-wrap{
+      display: none !important;
+    }
+    #example1 > thead{
+      background: #002171;
+      color: white;
+    }
+    .page-item.active .page-link{
+      background-color: #002171 !important;
+      border : none;
+    }
+    .btn-circle{
+      border-radius: 80%;
+    }
+    .btn-outline-primary-2{
+      background-color: transparent;
+      border-color: #002171;
+      color: #002171;
+    }
+    .btn-outline-primary-2:hover{
+      background-color: #002171;
+      border-color: #002171;
+      color: #FFF;
+    }
+    .bg-primary2{
+      background-color: #002171;
+      border-color: #002171;
+      color: #FFF;
+    }
+    .text-title {
+      font-size: 18px;
+    }
   </style>
 </head>
