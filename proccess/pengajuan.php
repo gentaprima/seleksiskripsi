@@ -7,3 +7,18 @@ function resultDataPengajuan($conn, $id_user)
     $result = mysqli_fetch_all($execQuery, MYSQLI_ASSOC);
     return $result;
 }
+
+function deletePengajuan($conn, $BASE_URL, $id)
+{
+    $where = [
+        'id_pengajuan' => $id
+    ];
+    $delete = delete('tb_pengajuan', $where, $conn);
+    if ($delete) {
+        $_SESSION['message'] = "Data Pengajuan skripsi berhasil dihapus";
+        $_SESSION['type'] = "success";
+        $_SESSION['title'] = "Success";
+        // echo "<script>window.location.href = '$BASE_URL'dashboard/profile.php;</script>";
+        Redirect($BASE_URL . 'dashboard/data-skripsi.php');
+    }
+}

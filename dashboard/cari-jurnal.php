@@ -11,7 +11,7 @@
 $dataSkripsi = null;
 $percent = 0;
 if (isset($_POST['search'])) {
-    $dataSkripsi = resultSearchWithPresentase($conn);
+    $dataSkripsi = resultSearchWithPresentase($conn,$BASE_URL);
 }
 ?>
 
@@ -58,21 +58,21 @@ if (isset($_POST['search'])) {
                                     <tr>
                                         <th style="width: 10px">#</th>
                                         <th>Judul Skripsi</th>
-                                        <th>Kategori</th>
+                                        <!-- <th>Kategori</th> -->
                                         <th>kemiripan</th>
                                         <th>Jurnal</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $num = 0;
+                                    $num = 1;
                                     foreach ($dataSkripsi as $skripsi) {
                                         similar_text(str_replace(' ', '', strtolower($skripsi['judul_skripsi'])), str_replace(' ', '', strtolower($_POST['judul_skripsi'])), $percent);
                                     ?>
                                         <tr>
                                             <td><span style="font-size: 13px;"><?= $num++ ?></span></td>
                                             <td><span style="font-size: 13px;"><?= strtoupper($skripsi['judul_skripsi']) ?></span></td>
-                                            <td><a class="badge text-primary" style="font-size: 13px;"><?= $skripsi['label'] ?></a></td>
+                                            <!-- <td><a class="badge text-primary" style="font-size: 13px;"><?= $skripsi['label'] ?></a></td> -->
                                             <?php if ((int) $percent >= 75) { ?>
                                                 <td><span class=" bg-danger pl-2 rounded pr-2 pt-1 pb-1" style="font-size: 13px;"><?= $skripsi['presentasi'] ?> %</span></td>
                                             <?php } else { ?>

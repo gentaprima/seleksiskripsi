@@ -111,18 +111,27 @@ function searchJudulSkripsi($conn)
     return $resultSearch;
 }
 
-function resultSearchWithPresentase($conn)
+function resultSearchWithPresentase($conn, $BASE_URL)
 {
     $resultSearch = searchJudulSkripsi($conn);
-    foreach ($resultSearch as $key => $d) {
-        similar_text(str_replace(' ', '', strtolower($d['judul_skripsi'])), str_replace(' ', '', strtolower($_POST['judul_skripsi'])), $percent);;
-        $d['presentasi'] = (int) $percent;
-        $resultSearch[$key] = $d;
+    $search = $_POST['judul_skripsi'];
+    $filtered = str_replace(' ', '', $search);
+    if ($filtered != null) {
+        foreach ($resultSearch as $key => $d) {
+            similar_text(str_replace(' ', '', strtolower($d['judul_skripsi'])), str_replace(' ', '', strtolower($_POST['judul_skripsi'])), $percent);;
+            $d['presentasi'] = (int) $percent;
+            $resultSearch[$key] = $d;
+        }
+        usort($resultSearch, function ($a, $b) {
+            return $b['presentasi'] - $a['presentasi'];
+        });
+        return $resultSearch;
+    } else {
+        $_SESSION['message'] = "Mohon maaf, Data tidak boleh kosong !";
+        $_SESSION['type'] = "error";
+        $_SESSION['title'] = "Warning";
+        Redirect($BASE_URL . 'dashboard/cari-jurnal.php');
     }
-    usort($resultSearch, function ($a, $b) {
-        return $b['presentasi'] - $a['presentasi'];
-    });
-    return $resultSearch;
 }
 
 
@@ -136,6 +145,7 @@ function addDataSkripsi($conn, $BASE_URL, $id_user)
     $predict = processMetode($conn, $input);
     $resultSearch = searchJudulSkripsi($conn, $predict);
     $percent = 0;
+    $fileProposal = $_FILES['proposal']['name'];
     foreach ($resultSearch as $key => $d) {
         similar_text(str_replace(' ', '', strtolower($d['judul_skripsi'])), str_replace(' ', '', strtolower($_POST['judul_skripsi'])), $percent);;
         $d['presentasi'] = (int) $percent;
@@ -144,33 +154,42 @@ function addDataSkripsi($conn, $BASE_URL, $id_user)
     $dataPersentaseMirip =  array_filter($resultSearch, function ($var) {
         return ($var['presentasi'] > 75);
     });
-    if (empty($dataPersentaseMirip)) {
-        $fileProposal = $_FILES['proposal']['name'];
-        $allowExt = ['pdf', 'doc', 'docx'];
-        $exploadFile = explode('.', $fileProposal);
-        $extension = strtolower(end($exploadFile));
-        $fileTmp = $_FILES['proposal']['tmp_name'];
-        $locationUpload = '../assets/proposal/';
-        if (!empty($_POST['judul_skripsi']) && !empty($_POST['studi_kasus']) && !empty($_POST['angkatan']) && !empty($_POST['pembimbing']) && !empty($fileProposal)) {
-            $fileProposal = $id_user . "-proposal" . $fileProposal;
-            if (in_array($extension, $allowExt) == true) {
-                move_uploaded_file($fileTmp, $locationUpload . $fileProposal);
-                $dataJudul = [
-                    "judul_skripsi" => $_POST['judul_skripsi'],
-                    "text_preprocessing" => $textPreprocessing,
-                    "label" => $predict,
-                    "proposal" => $fileProposal,
-                    "studi_kasus" => $_POST['studi_kasus']
-                ];
-                $ex = create($dataJudul, $conn, 'tbl_judul_skripsi');
-                $dataPengajuan = [
-                    'id_user' => $id_user,
-                    'id_pembimbing' => $_POST['pembimbing'],
-                    'id_judul' => $conn->insert_id,
-                    'tanggal_pengajuan' => date("Y-m-d"),
-                    'status' => 0
-                ];
-                $insertTablePengajuan = create($dataPengajuan, $conn, 'tb_pengajuan');
+    $persentasePlagiat = $dataPersentaseMirip[0]['presentasi'];
+    $allowExt = ['pdf', 'doc', 'docx'];
+            $exploadFile = explode('.', $fileProposal);
+            $extension = strtolower(end($exploadFile));
+            $fileTmp = $_FILES['proposal']['tmp_name'];
+            $locationUpload = '../assets/proposal/';
+    if(empty($dataPersentaseMirip)){
+        $status = 1;
+    }else{
+        $status = 0;
+    }
+    
+
+    if (!empty($_POST['judul_skripsi']) && !empty($_POST['studi_kasus']) && !empty($_POST['angkatan']) && !empty($_POST['pembimbing']) && !empty($fileProposal)) {
+       
+        $fileProposal = $id_user . "-proposal" . $fileProposal;
+        if (in_array($extension, $allowExt) == true) {
+            move_uploaded_file($fileTmp, $locationUpload . $fileProposal);
+            $dataJudul = [
+                "judul_skripsi" => $_POST['judul_skripsi'],
+                "text_preprocessing" => $textPreprocessing,
+                "label" => $predict,
+                "proposal" => $fileProposal,
+                "studi_kasus" => $_POST['studi_kasus'],    
+            ];
+            $ex = create($dataJudul, $conn, 'tbl_judul_skripsi');
+            $dataPengajuan = [
+                'id_user' => $id_user,
+                'id_pembimbing' => $_POST['pembimbing'],
+                'id_judul' => $conn->insert_id,
+                'tanggal_pengajuan' => date("Y-m-d"),
+                'persentase_plagiat' => $persentasePlagiat,
+                'status' => $status
+            ];
+            $insertTablePengajuan = create($dataPengajuan, $conn, 'tb_pengajuan');
+            if(empty($dataPersentaseMirip)){
                 if ($ex && $insertTablePengajuan) {
                     $_SESSION['message'] = "Selamat, Judul Skripsi Anda Diterima Oleh Sistem";
                     $_SESSION['type'] = "success";
@@ -180,23 +199,24 @@ function addDataSkripsi($conn, $BASE_URL, $id_user)
                     print_r("ERROR");
                     Redirect($BASE_URL . 'dashboard/daftar-skripsi.php');
                 }
-            } else {
-                $_SESSION['message'] = "File proposal tidak sesuai";
+            }else{
+                $_SESSION['message'] = "Judul Anda Terdeteksi Plagiat";
                 $_SESSION['type'] = "error";
                 $_SESSION['title'] = "Warning";
                 Redirect($BASE_URL . 'dashboard/daftar-skripsi.php');
             }
         } else {
-            $_SESSION['message'] = "Mohon maaf, untuk pendaftaran skripsi isi data dengan lengkap";
+            $_SESSION['message'] = "File proposal tidak sesuai";
             $_SESSION['type'] = "error";
             $_SESSION['title'] = "Warning";
             Redirect($BASE_URL . 'dashboard/daftar-skripsi.php');
         }
     } else {
-        $_SESSION['message'] = "Mohon maaf, Judul skripsi anda tidak diterima oleh sistem. silahkan cek di cari jurnal";
+        $_SESSION['message'] = "Mohon maaf, untuk pendaftaran skripsi isi data dengan lengkap";
         $_SESSION['type'] = "error";
         $_SESSION['title'] = "Warning";
         Redirect($BASE_URL . 'dashboard/daftar-skripsi.php');
-        return $dataPersentaseMirip;
     }
+    
+   
 }

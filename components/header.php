@@ -84,5 +84,8 @@ if ($_SESSION == null) {
     .text-title {
       font-size: 18px;
     }
+    tbody > tr > td{
+      font-size: 13px !important;
+    }
   </style>
 </head>

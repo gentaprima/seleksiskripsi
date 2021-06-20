@@ -195,7 +195,7 @@ if(isset($_GET['id'])){
                 <div class="row m-4">
                     <div class="col-md-4">
                         <div class="d-flex justify-content-center">
-                            <img style="width: 250px; height:250px" src="" id="image_users" alt="">
+                            <img style="width: auto; height:200px" src="" id="image_users" alt="">
                         </div>
                     </div>
                     <div class="col-md-8 mt-4">
