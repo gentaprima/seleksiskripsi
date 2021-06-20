@@ -91,8 +91,11 @@ function processMetode($conn, $input)
         array_push($dataLabel, $sample['label']);
     }
 
+    //text preprocessing
     $dataSample = vectorCount($dataSample);
     $dataSample = tfIDTransform($dataSample);
+
+    //pembobotan text 
     $GLOBALS['vectorizer']->transform($input);
     $GLOBALS['transformer']->transform($input);
 
