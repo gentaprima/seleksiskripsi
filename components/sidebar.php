@@ -47,6 +47,22 @@ function active($currect_page)
         </li>
         <?php if ($_SESSION['admin'] == true) { ?>
           <li class="nav-item">
+            <a href="<?= $BASE_URL ?>dashboard/data-ruang.php" class="nav-link <?php active("data-ruang.php") ?>">
+              <i class="nav-icon fas fa-table"></i>
+              <p>
+                Data Ruang
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="<?= $BASE_URL ?>dashboard/data-dosen.php" class="nav-link <?php active("data-dosen.php") ?>">
+              <i class="nav-icon fas fa-table"></i>
+              <p>
+                Data Dosen Pembimbing
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
             <a href="<?= $BASE_URL ?>dashboard/data-mahasiswa.php" class="nav-link <?php active("data-mahasiswa.php") ?>">
               <i class="nav-icon fas fa-table"></i>
               <p>

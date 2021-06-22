@@ -10,7 +10,7 @@ $dataPengajuan = readDataAllRow($conn, "SELECT * FROM tb_pengajuan
                                             JOIN tbl_judul_skripsi ON tb_pengajuan.id_judul = tbl_judul_skripsi.id_judul
                                             JOIN tbl_users ON tb_pengajuan.id_user = tbl_users.id_users
                                             JOIN tb_pembimbing ON tb_pengajuan.id_pembimbing = tb_pembimbing.id_pembimbing
-                                            WHERE tb_pengajuan.status = 0");
+                                            WHERE tb_pengajuan.status = 1");
 
 if(isset($_GET['id'])){
     deletePengajuan($conn,$BASE_URL,$_GET['id']);
@@ -68,16 +68,12 @@ if(isset($_GET['id'])){
                                     <td><?= $row['studi_kasus'] ?></td>
                                     <td><?= $row['nama_pembimbing'] ?></td>
                                     <td><?= date('d F Y', strtotime($row['tanggal_pengajuan'])) ?></td>
-                                    <td></td>
+                                    <td><a target="_blank" href="<?= $BASE_URL ?>assets/proposal/<?= $row['proposal'] ?>"><span class="badge badge-success">Lihat Proposal</span></a></td>
                                     <td>
                                         <div class="d-flex justify-content-center">
                                             <span data-toggle="tooltip" data-toggle="tooltip" data-placement="top" title="Lihat Detail">
                                                 <button onClick="detailMahasiswa('<?= $BASE_URL ?>','<?= $row['first_name'] ?>','<?= $row['last_name'] ?>','<?= $row['jk'] ?>','<?= $row['angkatan'] ?>','<?= $row['id_users'] ?>','<?= $row['image'] ?>','<?= $row['address'] ?>','<?= $row['semester'] ?>','<?= $row['email'] ?>','<?= $row['nim'] ?>')" data-toggle="modal" data-target="#modalDetail" type="button" class="btn btn-outline-primary-2 btn-circle btn-icon btn-sm">
                                                     <i class="fa fa-table"></i></button>
-                                            </span>
-                                            <span class="ml-1" data-toggle="tooltip" data-toggle="tooltip" data-placement="top" title="Ubah Data">
-                                                <button onClick="" data-toggle="modal" data-target="#modalEdit" type="button" class="btn btn-outline-info btn-circle btn-icon btn-sm">
-                                                    <i class="fa fa-edit"></i></button>
                                             </span>
                                             <span class="ml-1" data-toggle="tooltip" data-toggle="tooltip" data-placement="top" title="Hapus Data">
                                             <button  onClick="deleteData('<?= $BASE_URL ?>','<?= $row['id_pengajuan'] ?>')" data-toggle="modal" data-target="#modalDelete" type="button" class="btn btn-outline-danger btn-circle btn-icon btn-sm">
