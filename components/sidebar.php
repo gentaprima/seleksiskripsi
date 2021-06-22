@@ -3,7 +3,7 @@ function active($currect_page)
 {
   $url_array =  explode('/', $_SERVER['REQUEST_URI']);
   $url = end($url_array);
-  
+
   if ($currect_page == $url) {
     echo 'active'; //class name in css 
   }
@@ -45,42 +45,77 @@ function active($currect_page)
             </p>
           </a>
         </li>
-        <li class="nav-item">
-          <a href="<?= $BASE_URL ?>dashboard/profile.php" class="nav-link <?php active("profile.php") ?>">
-            <i class="nav-icon fas fa-table"></i>
-            <p>
-              Data Diri
-            </p>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="<?= $BASE_URL ?>dashboard/cari-jurnal.php" class="nav-link <?php active("cari-jurnal.php") ?>">
-            <i class="nav-icon fas fa-users"></i>
-            <p>
-              Cari Jurnal
-            </p>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="<?= $BASE_URL ?>dashboard/daftar-skripsi.php" class="nav-link <?php active("daftar-skripsi.php") ?>">
-            <i class="nav-icon fas fa-file"></i>
-            <p>
-              Daftar Skirpsi
-            </p>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="<?= $BASE_URL ?>dashboard/jadwal-sidang.php" class="nav-link <?php active("jadwal-sidang.php") ?>">
-            <i class="nav-icon fas fa-table"></i>
-            <p>
-              Jadwal Sidang
-            </p>
-          </a>
-        </li>
+        <?php if ($_SESSION['admin'] == true) { ?>
+          <li class="nav-item">
+            <a href="<?= $BASE_URL ?>dashboard/data-mahasiswa.php" class="nav-link <?php active("data-mahasiswa.php") ?>">
+              <i class="nav-icon fas fa-table"></i>
+              <p>
+                Data Mahasiswa
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="<?= $BASE_URL ?>dashboard/data-skripsi.php" class="nav-link <?php active("data-skripsi.php") ?>">
+              <i class="nav-icon fas fa-table"></i>
+              <p>
+                Data Skripsi
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="<?= $BASE_URL ?>dashboard/buat-jadwal.php" class="nav-link <?php active("buat-jadwal.php") ?>">
+              <i class="nav-icon fas fa-table"></i>
+              <p>
+                Buat Jadwal
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="<?= $BASE_URL ?>dashboard/hasil-sidang.php" class="nav-link <?php active("hasil-sidang.php") ?>">
+              <i class="nav-icon fas fa-table"></i>
+              <p>
+                Hasil Sidang
+              </p>
+            </a>
+          </li>
+        <?php } else { ?>
+          <li class="nav-item">
+            <a href="<?= $BASE_URL ?>dashboard/profile.php" class="nav-link <?php active("profile.php") ?>">
+              <i class="nav-icon fas fa-table"></i>
+              <p>
+                Data Diri
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="<?= $BASE_URL ?>dashboard/cari-jurnal.php" class="nav-link <?php active("cari-jurnal.php") ?>">
+              <i class="nav-icon fas fa-users"></i>
+              <p>
+                Cari Jurnal
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="<?= $BASE_URL ?>dashboard/daftar-skripsi.php" class="nav-link <?php active("daftar-skripsi.php") ?>">
+              <i class="nav-icon fas fa-file"></i>
+              <p>
+                Daftar Skirpsi
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="<?= $BASE_URL ?>dashboard/jadwal-sidang.php" class="nav-link <?php active("jadwal-sidang.php") ?>">
+              <i class="nav-icon fas fa-table"></i>
+              <p>
+                Jadwal Sidang
+              </p>
+            </a>
+          </li>
+        <?php } ?>
         <li class="nav-header">lain-lain</li>
 
         <li class="nav-item has-treeview menu">
-          <a href="<?= $BASE_URL ?>login/logout_process" class="nav-link">
+          <a href="<?= $BASE_URL ?>dashboard/logout.php" class="nav-link">
             <i class="nav-icon fas fa-sign-out-alt"></i>
             <p>
               Logout

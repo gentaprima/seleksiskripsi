@@ -91,8 +91,11 @@ function processMetode($conn, $input)
         array_push($dataLabel, $sample['label']);
     }
 
+    //text preprocessing
     $dataSample = vectorCount($dataSample);
     $dataSample = tfIDTransform($dataSample);
+
+    //pembobotan text 
     $GLOBALS['vectorizer']->transform($input);
     $GLOBALS['transformer']->transform($input);
 
@@ -111,18 +114,27 @@ function searchJudulSkripsi($conn)
     return $resultSearch;
 }
 
-function resultSearchWithPresentase($conn)
+function resultSearchWithPresentase($conn, $BASE_URL)
 {
     $resultSearch = searchJudulSkripsi($conn);
-    foreach ($resultSearch as $key => $d) {
-        similar_text(str_replace(' ', '', strtolower($d['judul_skripsi'])), str_replace(' ', '', strtolower($_POST['judul_skripsi'])), $percent);;
-        $d['presentasi'] = (int) $percent;
-        $resultSearch[$key] = $d;
+    $search = $_POST['judul_skripsi'];
+    $filtered = str_replace(' ', '', $search);
+    if ($filtered != null) {
+        foreach ($resultSearch as $key => $d) {
+            similar_text(str_replace(' ', '', strtolower($d['judul_skripsi'])), str_replace(' ', '', strtolower($_POST['judul_skripsi'])), $percent);;
+            $d['presentasi'] = (int) $percent;
+            $resultSearch[$key] = $d;
+        }
+        usort($resultSearch, function ($a, $b) {
+            return $b['presentasi'] - $a['presentasi'];
+        });
+        return $resultSearch;
+    } else {
+        $_SESSION['message'] = "Mohon maaf, Data tidak boleh kosong !";
+        $_SESSION['type'] = "error";
+        $_SESSION['title'] = "Warning";
+        Redirect($BASE_URL . 'dashboard/cari-jurnal.php');
     }
-    usort($resultSearch, function ($a, $b) {
-        return $b['presentasi'] - $a['presentasi'];
-    });
-    return $resultSearch;
 }
 
 

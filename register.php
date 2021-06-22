@@ -4,7 +4,7 @@
 <?php
 session_start();
 if (isset($_POST['submit'])) {
-    addData($_POST,$conn,$BASE_URL);
+    addData($_POST, $conn, $BASE_URL);
 }
 
 ?>
@@ -36,6 +36,9 @@ if (isset($_POST['submit'])) {
                 <p class="login-box-msg">Silahkan Login terlebih dahulu !</p>
 
                 <form action="" method="post">
+                    <div class="form-group mb-3">
+                        <input type="text" class="form-control" name="nim" placeholder="NIM">
+                    </div>
                     <div class="row">
                         <div class="col-6">
                             <div class="form-group">
@@ -47,6 +50,28 @@ if (isset($_POST['submit'])) {
                                 <input type="text" name="last_name" placeholder="Nama Belakang" class="form-control">
                             </div>
                         </div>
+                    </div>
+                    <div class="form-group">
+                        <select name="angkatan" class="form-control" id="">
+                            <option value="">-- Pilih Angkatan --</option>
+                            <option value="2021">2021</option>
+                            <option value="2020">2020</option>
+                            <option value="2019">2019</option>
+                            <option value="2018">2018</option>
+                            <option value="2017">2017</option>
+                            <option value="2016">2016</option>
+                            <option value="2015">2015</option>
+                            <option value="2014">2014</option>
+                            <option value="2013">2013</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select name="semester" class="form-control" id="">
+                            <option value="">-- Pilih Semester --</option>
+                            <?php for ($i = 1; $i <= 10; $i++) { ?>
+                                <option value="Semester <?= $i ?>">Semester <?= $i ?></option>
+                            <?php } ?>
+                        </select>
                     </div>
                     <div class="input-group mb-3">
                         <input type="email" class="form-control" name="email" placeholder="Email">
@@ -86,15 +111,15 @@ if (isset($_POST['submit'])) {
                 <p class="mb-0">
                     <a href="<?= $BASE_URL ?>" class="text-center">Login Kembali</a>
                 </p>
-                <?php if(isset($_SESSION['message'])){ ?>
-                <p style="display: none;" id="message"><?= $_SESSION['message'] ?></p>
-                <p style="display: none;" id="type"><?= $_SESSION['type'] ?></p>
-                <p style="display: none;" id="title"><?= $_SESSION['title'] ?></p>
+                <?php if (isset($_SESSION['message'])) { ?>
+                    <p style="display: none;" id="message"><?= $_SESSION['message'] ?></p>
+                    <p style="display: none;" id="type"><?= $_SESSION['type'] ?></p>
+                    <p style="display: none;" id="title"><?= $_SESSION['title'] ?></p>
                 <?php } ?>
-                <?php 
-                    UNSET($_SESSION['message']);
-                    UNSET($_SESSION['type']);
-                    UNSET($_SESSION['title']);
+                <?php
+                unset($_SESSION['message']);
+                unset($_SESSION['type']);
+                unset($_SESSION['title']);
                 ?>
             </div>
             <!-- /.login-card-body -->
@@ -111,15 +136,15 @@ if (isset($_POST['submit'])) {
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
         let message = document.getElementById('message');
-        if(message != null){
+        if (message != null) {
             let title = document.getElementById('title').innerHTML;
             let type = document.getElementById('type').innerHTML;
             swal({
                 title: title,
                 text: message.innerHTML,
                 icon: type,
-                });
-             }
+            });
+        }
     </script>
 
 </body>

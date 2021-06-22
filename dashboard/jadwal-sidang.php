@@ -77,7 +77,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="url_sidang" class="col-sm-2">Link sidang online</label>
+                            <label for="url_sidang" class="col-sm-2">Ruangan</label>
                             <div class="col-sm-10">
                                 <input type="text" readonly name="url_sidang" class="form-control">
                             </div>
