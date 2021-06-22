@@ -12,8 +12,11 @@ $dataPengajuan = readDataAllRow($conn, "SELECT * FROM tb_pengajuan
                                             JOIN tb_pembimbing ON tb_pengajuan.id_pembimbing = tb_pembimbing.id_pembimbing
                                             WHERE tb_pengajuan.status = 1");
 
-if(isset($_GET['id'])){
-    deletePengajuan($conn,$BASE_URL,$_GET['id']);
+$dataRuang = readDataAllRow($conn, "SELECT * FROM tb_ruang");
+
+
+if (isset($_GET['id'])) {
+    deletePengajuan($conn, $BASE_URL, $_GET['id']);
 }
 ?>
 
@@ -71,12 +74,16 @@ if(isset($_GET['id'])){
                                     <td><a target="_blank" href="<?= $BASE_URL ?>assets/proposal/<?= $row['proposal'] ?>"><span class="badge badge-success">Lihat Proposal</span></a></td>
                                     <td>
                                         <div class="d-flex justify-content-center">
-                                            <span data-toggle="tooltip" data-toggle="tooltip" data-placement="top" title="Lihat Detail">
-                                                <button onClick="detailMahasiswa('<?= $BASE_URL ?>','<?= $row['first_name'] ?>','<?= $row['last_name'] ?>','<?= $row['jk'] ?>','<?= $row['angkatan'] ?>','<?= $row['id_users'] ?>','<?= $row['image'] ?>','<?= $row['address'] ?>','<?= $row['semester'] ?>','<?= $row['email'] ?>','<?= $row['nim'] ?>')" data-toggle="modal" data-target="#modalDetail" type="button" class="btn btn-outline-primary-2 btn-circle btn-icon btn-sm">
+                                            <span data-toggle="tooltip" data-toggle="tooltip" data-placement="top" title="Buat Jadwal">
+                                                <button onClick="" data-toggle="modal" data-target="#modalJadwal" type="button" class="btn btn-outline-primary-2 btn-circle btn-icon btn-sm">
+                                                    <i class="fa fa-edit"></i></button>
+                                            </span>
+                                            <span class="ml-1" data-toggle="tooltip" data-toggle="tooltip" data-placement="top" title="Lihat Detail">
+                                                <button onClick="detailMahasiswa('<?= $BASE_URL ?>','<?= $row['first_name'] ?>','<?= $row['last_name'] ?>','<?= $row['jk'] ?>','<?= $row['angkatan'] ?>','<?= $row['id_users'] ?>','<?= $row['image'] ?>','<?= $row['address'] ?>','<?= $row['semester'] ?>','<?= $row['email'] ?>','<?= $row['nim'] ?>')" data-toggle="modal" data-target="#modalDetail" type="button" class="btn btn-outline-info btn-circle btn-icon btn-sm">
                                                     <i class="fa fa-table"></i></button>
                                             </span>
                                             <span class="ml-1" data-toggle="tooltip" data-toggle="tooltip" data-placement="top" title="Hapus Data">
-                                            <button  onClick="deleteData('<?= $BASE_URL ?>','<?= $row['id_pengajuan'] ?>')" data-toggle="modal" data-target="#modalDelete" type="button" class="btn btn-outline-danger btn-circle btn-icon btn-sm">
+                                                <button onClick="deleteData('<?= $BASE_URL ?>','<?= $row['id_pengajuan'] ?>')" data-toggle="modal" data-target="#modalDelete" type="button" class="btn btn-outline-danger btn-circle btn-icon btn-sm">
                                                     <i class="fa fa-trash"></i></button>
                                             </span>
                                         </div>
@@ -94,6 +101,53 @@ if(isset($_GET['id'])){
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
+<div class="modal fade" id="modalJadwal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content ">
+            <div class="modal-header bg-primary2">
+                <h5 class="modal-title" id="modal_title">Buat Jadwal Sidang</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span style="color: #fff;" aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row mt-4">
+                    <label for="" class="col-sm-2">Ruang</label>
+                    <div class="col-sm-10">
+                        <div class="input-group">
+                            <select onChange="selectRuang(this)" name="ruang" id="ruang" style="background-color: #f2f4f6;border: 0;" type="text" class="form-control">
+                                <option value="">- Pilih Ruang -</option>
+                                <?php foreach ($dataRuang as $row) { ?>
+                                    <option value="<?= $row['id_ruang'] ?>"><?= $row['nama_ruang'] ?> - <?= date('d F Y',strtotime($row['tanggal'])) ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row ">
+                    <label for="" class="col-sm-2">Dosen Penguji 1</label>
+                    <div class="col-sm-10">
+                        <div class="input-group">
+                            <input  name="penguji_1" readonly id="penguji_1" style="background-color: #f2f4f6;border: 0;" type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row ">
+                    <label for="" class="col-sm-2">Dosen Penguji 2</label>
+                    <div class="col-sm-10">
+                        <div class="input-group">
+                            <input  name="penguji_2" readonly id="penguji_2" style="background-color: #f2f4f6;border: 0;" type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="submit" id="submit" class="btn btn-primary">Buat Jadwal</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="modal fade" id="modalDetail" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content ">
@@ -213,6 +267,21 @@ if(isset($_GET['id'])){
         document.getElementById("angkatan_detail").innerHTML = ": " + angkatan;
         document.getElementById("email_detail").innerHTML = ": " + email;
         document.getElementById("alamat_detail").innerHTML = ": " + address;
+    }
+
+    function selectRuang(id){
+        var value = id.value;  
+        $.ajax({
+            type : "GET",
+            url : "http://localhost/seleksiskripsi/dashboard/read-data-ajax.php?id="+value,
+            dataType : 'HTML',
+            success : function(response){
+                console.log(JSON.parse(response));
+                var data = JSON.parse(response);
+                document.getElementById("penguji_1").value = data.penguji_1
+                document.getElementById("penguji_2").value = data.penguji_2
+            }
+        })
     }
 </script>
 <?php include '../components/footer.php' ?>
