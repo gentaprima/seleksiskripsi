@@ -154,31 +154,46 @@ $tab1 = "";
                                                     <th style="font-size: 14px;font-size: 14px;">Jadwal Sidang</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                                <?php
-                                                $num = 1;
-                                                foreach ($dataPengajuan as $pj) {
-                                                ?>
-                                                    <tr>
-                                                        <td style="font-size: 14px;"><?= $num ?>.</td>
-                                                        <td style="font-size: 14px;"><?= $pj['judul_skripsi'] ?></td>
-                                                        <td style="font-size: 14px;"><?= $pj['studi_kasus'] ?></td>
-                                                        <td style="font-size: 14px;"><?= $pj['nama_pembimbing'] ?></td>
-                                                        <td style="font-size: 14px;"><?= $pj['tanggal_pengajuan'] ?></td>
-                                                        <?php if ($pj['status'] == 0) { ?>
-                                                            <td><span class="bg-info pl-2 pr-2 pt-1 pb-1 rounded" style="font-size: 11px;">Menunggu Konfirmasi</span></td>
-                                                            <td><span style="font-size: 14px;" class="text-muted">Jadwal Sidang</span></td>
-                                                        <?php } else if ($pj['status'] == 1) { ?>
-                                                            <td><span class="bg-success pl-2 pr-2 pt-1 pb-1 rounded" style="font-size: 11px;">Diterima</span></td>
-                                                            <td><a style="font-size: 14px;" href="<?= $BASE_URL ?>dashboard/jadwal-sidang.php">Jadwal Sidang</a></td>
-                                                        <?php } else { ?>
-                                                            <td><span class="bg-danger pl-2 pr-2 pt-1 pb-1 rounded" style="font-size: 11px;">Ditolak</span></td>
-                                                            <td><span style="font-size: 14px;" class="text-muted">Jadwal Sidang</span></td>
-                                                        <?php } ?>
+                                            <?php if ($dataPengajuan != null) { ?>
+                                                <tbody>
+                                                    <?php
+                                                    $num = 1;
+                                                    foreach ($dataPengajuan as $pj) {
+                                                    ?>
+                                                        <tr>
+                                                            <td style="font-size: 14px;"><?= $num ?>.</td>
+                                                            <td style="font-size: 14px;"><?= $pj['judul_skripsi'] ?></td>
+                                                            <td style="font-size: 14px;"><?= $pj['studi_kasus'] ?></td>
+                                                            <td style="font-size: 14px;"><?= $pj['nama_pembimbing'] ?></td>
+                                                            <td style="font-size: 14px;"><?= $pj['tanggal_pengajuan'] ?></td>
+                                                            <?php if ($pj['status'] == 0) { ?>
+                                                                <td><span class="bg-info pl-2 pr-2 pt-1 pb-1 rounded" style="font-size: 11px;">Menunggu Konfirmasi</span></td>
+                                                                <td><span style="font-size: 14px;" class="text-muted">Jadwal Sidang</span></td>
+                                                            <?php } else if ($pj['status'] == 1) { ?>
+                                                                <td><span class="bg-success pl-2 pr-2 pt-1 pb-1 rounded" style="font-size: 11px;">Diterima</span></td>
+                                                                <td><a style="font-size: 14px;" href="<?= $BASE_URL ?>dashboard/jadwal-sidang.php">Jadwal Sidang</a></td>
+                                                            <?php } else { ?>
+                                                                <td><span class="bg-danger pl-2 pr-2 pt-1 pb-1 rounded" style="font-size: 11px;">Ditolak</span></td>
+                                                                <td><span style="font-size: 14px;" class="text-muted">Jadwal Sidang</span></td>
+                                                            <?php } ?>
+                                                        </tr>
+                                                    <?php $num++;
+                                                    }
+                                                    ?>
+                                                </tbody>
+                                            <?php } else { ?>
+                                                <tbody>
+                                                    <tr class="bg-light">
+                                                        <td colspan="7">
+                                                            <center>
+                                                                <div class="col-12">
+                                                                    <span style="font-weight: 800;" class="text-danger">Data Tidak Tersedia</span>
+                                                                </div>
+                                                            </center>
+                                                        </td>
                                                     </tr>
-                                                <?php $num++;
-                                                } ?>
-                                            </tbody>
+                                                </tbody>
+                                            <?php } ?>
                                         </table>
                                     </div>
                                 </div>
