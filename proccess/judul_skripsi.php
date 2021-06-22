@@ -168,7 +168,8 @@ function addDataSkripsi($conn, $BASE_URL, $id_user)
                     'id_pembimbing' => $_POST['pembimbing'],
                     'id_judul' => $conn->insert_id,
                     'tanggal_pengajuan' => date("Y-m-d"),
-                    'status' => 0
+                    'status' => 0,
+                    'periode'=>$_POST['periode']
                 ];
                 $insertTablePengajuan = create($dataPengajuan, $conn, 'tb_pengajuan');
                 if ($ex && $insertTablePengajuan) {

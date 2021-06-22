@@ -8,6 +8,7 @@
 <?php include '../proccess/pembimbing.php' ?>
 <?php include '../proccess/pengajuan.php' ?>
 <?php
+
 $dataPembimbing = fetchPembimbing($conn);
 $emailUsers = $_SESSION['users_data']['email'];
 $dataUsers = getDataRow("SELECT * FROM tbl_users WHERE email = '$emailUsers'", $conn);
@@ -79,6 +80,12 @@ $tab1 = "";
                                                     <input name="studi_kasus" style="background-color: #f2f4f6;border: 0;" type="text" class="form-control" placeholder="Studi Kasus" aria-label="kasus" aria-describedby="basic-addon1">
                                                     <div class="input-group-prepend">
                                                         <span style="background-color: #f2f4f6;border: 0;" class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+                                                    </div>
+                                                </div>
+                                                <div class="input-group" style="margin-bottom: 1.3%;">
+                                                    <input readonly value="<?= periode() ?>" name="periode" style="background-color: #f2f4f6;border: 0;" type="text" class="form-control" placeholder="Periode" aria-label="kasus" aria-describedby="basic-addon1">
+                                                    <div class="input-group-prepend">
+                                                        <span style="background-color: #f2f4f6;border: 0;" class="input-group-text" id="basic-addon1"><i class="fa fa-date"></i></span>
                                                     </div>
                                                 </div>
                                                 <div class="input-group" style="margin-bottom: 1.3%;">
