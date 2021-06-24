@@ -10,13 +10,17 @@ $dataPengajuan = readDataAllRow($conn, "SELECT * FROM tb_pengajuan
                                             JOIN tbl_judul_skripsi ON tb_pengajuan.id_judul = tbl_judul_skripsi.id_judul
                                             JOIN tbl_users ON tb_pengajuan.id_user = tbl_users.id_users
                                             JOIN tb_pembimbing ON tb_pengajuan.id_pembimbing = tb_pembimbing.id_pembimbing
-                                            WHERE tb_pengajuan.status = 1");
+                                            WHERE tb_pengajuan.status = 1 AND status_jadwal = 0");
 
 $dataRuang = readDataAllRow($conn, "SELECT * FROM tb_ruang");
 
 
 if (isset($_GET['id'])) {
     deletePengajuan($conn, $BASE_URL, $_GET['id']);
+}
+
+if(isset($_POST['submit_jadwal'])){
+    addJadwal($_POST,$conn,$BASE_URL);
 }
 ?>
 
@@ -75,7 +79,7 @@ if (isset($_GET['id'])) {
                                     <td>
                                         <div class="d-flex justify-content-center">
                                             <span data-toggle="tooltip" data-toggle="tooltip" data-placement="top" title="Buat Jadwal">
-                                                <button onClick="" data-toggle="modal" data-target="#modalJadwal" type="button" class="btn btn-outline-primary-2 btn-circle btn-icon btn-sm">
+                                                <button onClick="insertJadwal('<?= $row['id_pengajuan'] ?>')" data-toggle="modal" data-target="#modalJadwal" type="button" class="btn btn-outline-primary-2 btn-circle btn-icon btn-sm">
                                                     <i class="fa fa-edit"></i></button>
                                             </span>
                                             <span class="ml-1" data-toggle="tooltip" data-toggle="tooltip" data-placement="top" title="Lihat Detail">
@@ -111,11 +115,12 @@ if (isset($_GET['id'])) {
                 </button>
             </div>
             <div class="modal-body">
+                <form action="" method="post">
                 <div class="form-group row mt-4">
                     <label for="" class="col-sm-2">Ruang</label>
                     <div class="col-sm-10">
                         <div class="input-group">
-                            <select onChange="selectRuang(this)" name="ruang" id="ruang" style="background-color: #f2f4f6;border: 0;" type="text" class="form-control">
+                            <select onChange="selectRuang(this)" name="ruang" id="ruang" required style="background-color: #f2f4f6;border: 0;" type="text" class="form-control">
                                 <option value="">- Pilih Ruang -</option>
                                 <?php foreach ($dataRuang as $row) { ?>
                                     <option value="<?= $row['id_ruang'] ?>"><?= $row['nama_ruang'] ?> - <?= date('d F Y',strtotime($row['tanggal'])) ?></option>
@@ -140,10 +145,12 @@ if (isset($_GET['id'])) {
                         </div>
                     </div>
                 </div>
+                <input type="hidden" name="id_pengajuan" id="id_pengajuan">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                <button type="submit" id="submit" class="btn btn-primary">Buat Jadwal</button>
+                <button type="submit" id="submit" name="submit_jadwal" class="btn btn-primary">Buat Jadwal</button>
+                </form>
             </div>
         </div>
     </div>
@@ -282,6 +289,10 @@ if (isset($_GET['id'])) {
                 document.getElementById("penguji_2").value = data.penguji_2
             }
         })
+    }
+
+    function insertJadwal(idRuang){
+        document.getElementById("id_pengajuan").value = idRuang;
     }
 </script>
 <?php include '../components/footer.php' ?>

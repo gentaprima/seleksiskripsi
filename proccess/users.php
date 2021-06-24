@@ -189,6 +189,8 @@ function changeProfile($data, $image, $conn, $BASE_URL){
                                                 email = '$email'
                                                 WHERE id_users = '$sessionUsers'";
                 $execQuery = mysqli_query($conn, $query);
+                $getDataUsers = getDataRow("SELECT * FROM tbl_users WHERE id_users = '$sessionUsers'",$conn);
+                $_SESSION['users_data'] = $getDataUsers;
                 if ($execQuery) {
                     $_SESSION['message'] = "Data diri Anda berhasil diperbarui";
                     $_SESSION['type'] = "success";

@@ -32,3 +32,36 @@ function deletePengajuan($conn, $BASE_URL, $id){
         Redirect($BASE_URL . 'dashboard/data-skripsi.php');
    }
 }
+
+function addJadwal($data,$conn,$BASE_URL){
+    $idRuang = $_POST['ruang'];
+    $idPengajuan = $_POST['id_pengajuan'];
+
+    if($idRuang != null){
+        $data = [
+            'id_ruang' => $idRuang,
+            'id_pengajuan' => $idPengajuan
+        ];
+        $dataUpdate = [
+            'status_jadwal' => 1
+        ];
+        $where = [
+            'id_pengajuan' => $idPengajuan
+        ];
+        update($dataUpdate,$where,'tb_pengajuan',$conn);
+        $add = create($data,$conn,'tb_jadwal');
+        if($add){
+            $_SESSION['message'] = "Data Pengajuan Sidang berhasil dijadwalkan !";
+            $_SESSION['type'] = "success";
+            $_SESSION['title'] = "Success";
+            // echo "<script>window.location.href = '$BASE_URL'dashboard/profile.php;</script>";
+            Redirect($BASE_URL . 'dashboard/buat-jadwal.php');
+        }
+    }else{
+        $_SESSION['message'] = "Mohon maaf, tolong lengkapi form data.";
+        $_SESSION['type'] = "error";
+        $_SESSION['title'] = "Warning !";
+        // echo "<script>window.location.href = '$BASE_URL'dashboard/profile.php;</script>";
+        Redirect($BASE_URL . 'dashboard/buat-jadwal.php');
+    }
+}
