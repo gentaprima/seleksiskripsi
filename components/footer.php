@@ -84,12 +84,6 @@
 <script>
  
 </script>
-<script src="<?= $BASE_URL?>assets/merk.js"></script>
-<script src="<?= $BASE_URL?>assets/type.js"></script>
-<script src="<?= $BASE_URL?>assets/product.js"></script>
-<script src="<?= $BASE_URL?>assets/alert.js"></script>
-<script src="<?= $BASE_URL?>assets/penyewa.js"></script>
-<script src="<?= $BASE_URL?>assets/home/transaksi.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 <script>

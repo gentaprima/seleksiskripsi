@@ -10,7 +10,7 @@ $dataPengajuan = readDataAllRow($conn, "SELECT * FROM tb_pengajuan
                                             JOIN tbl_judul_skripsi ON tb_pengajuan.id_judul = tbl_judul_skripsi.id_judul
                                             JOIN tbl_users ON tb_pengajuan.id_user = tbl_users.id_users
                                             JOIN tb_pembimbing ON tb_pengajuan.id_pembimbing = tb_pembimbing.id_pembimbing
-                                            WHERE tb_pengajuan.status = 1 AND status_jadwal = 0");
+                                            WHERE tb_pengajuan.status = 0 AND status_jadwal = 0");
 
 $dataRuang = readDataAllRow($conn, "SELECT * FROM tb_ruang");
 

@@ -164,6 +164,7 @@ function addDataSkripsi($conn, $BASE_URL, $id_user)
         $fileTmp = $_FILES['proposal']['tmp_name'];
         $locationUpload = '../assets/proposal/';
         if (!empty($_POST['judul_skripsi']) && !empty($_POST['studi_kasus']) && !empty($_POST['angkatan']) && !empty($_POST['pembimbing']) && !empty($fileProposal)) {
+            print("data ga koosong");
             $fileProposal = $id_user . "-proposal" . $fileProposal;
             if (in_array($extension, $allowExt) == true) {
                 move_uploaded_file($fileTmp, $locationUpload . $fileProposal);
@@ -190,7 +191,6 @@ function addDataSkripsi($conn, $BASE_URL, $id_user)
                     $_SESSION['title'] = "Success";
                     Redirect($BASE_URL . 'dashboard/daftar-skripsi.php');
                 } else {
-                    print_r("ERROR");
                     Redirect($BASE_URL . 'dashboard/daftar-skripsi.php');
                 }
             } else {

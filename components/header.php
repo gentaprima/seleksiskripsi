@@ -87,5 +87,16 @@ if ($_SESSION == null) {
     tbody > tr > td{
       font-size: 13px !important;
     }
+
+    .new-form{
+      background-color: #f2f4f6;
+      border: 0;
+    }
+    .new-form:focus{
+      background-color: #f2f4f6;
+      border: 0;
+    }
+
+
   </style>
 </head>

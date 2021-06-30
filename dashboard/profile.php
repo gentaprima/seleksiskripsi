@@ -52,7 +52,7 @@ $dataUsers = getDataRow("SELECT * FROM tbl_users WHERE email = '$emailUsers'", $
                                 <?php if ($dataUsers['image'] == null) { ?>
                                     <img class="d-block mx-auto" style="width: 150px; height:150px" src="<?= $BASE_URL ?>assets/image/user.png" alt="">
                                 <?php } else { ?>
-                                    <img style="width: 150px; height:150px" src="<?= $BASE_URL ?>assets/image/<?= $dataUsers['image'] ?>" alt="">
+                                    <img style="width: auto; height:150px" src="<?= $BASE_URL ?>assets/image/<?= $dataUsers['image'] ?>" alt="">
                                 <?php } ?>
                             </div>
                             <h4 class="text-center mt-2 text-uppercase"><?= $dataUsers['first_name'] ?> <?= $dataUsers['last_name'] ?></h4>
