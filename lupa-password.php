@@ -3,13 +3,9 @@
 <?php include 'config/database.php' ?>
 <?php include 'proccess/users.php' ?>
 <?php
-if (isset($_POST['submit'])) {
-  proccessLogin($_POST, $conn, $BASE_URL);
-}
-if(isset($_SESSION['users_data'])){
-  $link = $BASE_URL.'dashboard';
-  Redirect($link);
-}
+  if(isset($_POST['submit'])){
+    forgotPassword($_POST,$conn,$BASE_URL);
+  }
 ?>
 <html lang="en">
 
@@ -36,7 +32,7 @@ if(isset($_SESSION['users_data'])){
     <!-- /.login-logo -->
     <div class="card">
       <div class="card-body login-card-body">
-        <p class="login-box-msg">Silahkan Login terlebih dahulu !</p>
+        <p class="login-box-msg">Form Lupa Password !</p>
 
         <form action="" method="post">
           <div class="input-group mb-3">
@@ -48,7 +44,7 @@ if(isset($_SESSION['users_data'])){
             </div>
           </div>
           <div class="input-group mb-3">
-            <input type="password" class="form-control" name="password" placeholder="Password">
+            <input type="text" class="form-control" name="nim" placeholder="NIM">
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-lock"></span>
@@ -57,7 +53,7 @@ if(isset($_SESSION['users_data'])){
           </div>
           <div class="row">
             <div class="col-12">
-              <button type="submit" name="submit" class="btn btn-primary btn-block">Sign In</button>
+              <button type="submit" name="submit" class="btn btn-primary btn-block">Konfirmasi Data</button>
             </div>
             <!-- /.col -->
           </div>
@@ -67,7 +63,7 @@ if(isset($_SESSION['users_data'])){
         <!-- /.social-auth-links -->
 
         <p class="mb-1">
-          <a href="<?= $BASE_URL ?>lupa-password.php">I forgot my password</a>
+          <a href="<?= $BASE_URL ?>">Back To Login</a>
         </p>
         <p class="mb-0">
           <a href="<?= $BASE_URL ?>register.php" class="text-center">Register new Account</a>

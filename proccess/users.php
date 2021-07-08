@@ -293,4 +293,89 @@ function changePassword($data,$conn,$BASE_URL){
     }
 }
 
+function forgotPassword($data,$conn,$BASE_URL){
+    $email = $data['email'];
+    $nim = $data['nim'];
 
+    if($email != null && $nim != null){
+        $query = "SELECT * FROM tbl_users WHERE email = '$email'";
+        $queryNim = "SELECT * FROM tbl_users WHERE nim = '$nim'";
+        $checkEmail = getDataRow($query,$conn);
+        $checkNim = getDataRow($queryNim,$conn);
+        if($checkEmail == null){
+            $_SESSION['message'] = "Mohon maaf, Email yang anda input tidak terdaftar di sistem kami !";
+            $_SESSION['type'] = "error";
+            $_SESSION['title'] = "Warning";
+            Redirect($BASE_URL.'lupa-password.php');
+            exit();
+        }
+        if($checkNim == null){
+            $_SESSION['message'] = "Mohon maaf, Nim yang anda input tidak terdaftar di sistem kami !";
+            $_SESSION['type'] = "error";
+            $_SESSION['title'] = "Warning";
+            Redirect($BASE_URL.'lupa-password.php');
+            exit();
+        }
+        
+        if($checkEmail['email'] == $checkNim['email']){
+            $_SESSION['change_password'] = true;
+            $_SESSION['confirm_email'] = $checkEmail['email'];
+            Redirect($BASE_URL.'change-password.php');
+            exit();
+        }else{
+            $_SESSION['message'] = "Mohon maaf, Data yang Anda input tidak sesuai !";
+            $_SESSION['type'] = "error";
+            $_SESSION['title'] = "Warning";
+            Redirect($BASE_URL.'lupa-password.php');
+            exit();
+        }
+    }else{
+        $_SESSION['message'] = "Mohon maaf, Data tidak boleh kosong !";
+        $_SESSION['type'] = "error";
+        $_SESSION['title'] = "Warning";
+        Redirect($BASE_URL.'lupa-password.php');
+        exit();
+    }
+}
+
+
+function changePasswordForgot($data,$conn,$BASE_URL){
+    $email = $data['email'];
+    $password = $data['new_password'];
+    $confirmPassword = $data['confirm_password'];
+
+    if($email != null && $password != null && $confirmPassword != null){
+        if($confirmPassword == $password){
+            // $data = [
+            //     'password' => $password
+            // ];
+            // $where = [
+            //     'email' => $email
+            // ];
+            // update($data,$where,'tbl_users',$conn);
+            $hashPassword = password_hash($password,PASSWORD_DEFAULT);
+            $query = "UPDATE tbl_users SET password = '$hashPassword' WHERE email = '$email'";
+            $execQuery = mysqli_query($conn,$query);
+            if($execQuery){
+
+                $_SESSION['message'] = "Selamat, Password anda berhasil diperbarui";
+                $_SESSION['type'] = "success";
+                $_SESSION['title'] = "Sukses";
+                Redirect($BASE_URL);
+                exit();
+            }
+        }else{
+            $_SESSION['message'] = "Mohon maaf, Konfirmasi password yang anda input tidak sama !";
+            $_SESSION['type'] = "error";
+            $_SESSION['title'] = "Warning";
+            Redirect($BASE_URL.'change-password.php');
+            exit();
+        }
+    }else{
+        $_SESSION['message'] = "Mohon maaf, Data tidak boleh kosong !";
+        $_SESSION['type'] = "error";
+        $_SESSION['title'] = "Warning";
+        Redirect($BASE_URL.'change-password.php');
+        exit();
+    }
+}
