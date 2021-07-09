@@ -126,8 +126,8 @@ function processMetode($conn, $input)
         return   $a['jarak'] - $b['jarak'];
     });
     //perhitungan knn
-    print_r($stepKNN);
-    die;
+    // print_r($stepKNN);
+    // die;
     //test prediction
     $classifier = new KNearestNeighbors(5, new Euclidean());
     $classifier->train($dataSample, $dataLabel);
