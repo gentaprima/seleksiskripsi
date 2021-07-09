@@ -86,14 +86,17 @@ function showDistance($input, $judul, $sample, $allData)
     $euclidean = new Euclidean();
     $i = 0;
     $result = array();
+    $stem = stemmingJudul($judul);
+    $stopword = stopwordJudul($stem);
     foreach ($sample as $dt) {
         $distance = array();
         $distance['judul_input'] = $judul;
+        $distance['stemming'] = $stem;
+        $distance['stopword'] = $stopword;
         $distance['judul_sampel'] = $allData[$i]['judul_skripsi'];
         $distance['jarak'] = $euclidean->distance($input[0], $dt);
         $distance['bobot_input'] = $input;
         array_push($result, $distance);
-        
         $i+=1;
     }
     return $result;
@@ -123,8 +126,8 @@ function processMetode($conn, $input)
         return   $a['jarak'] - $b['jarak'];
     });
     //perhitungan knn
-    // print_r($stepKNN);
-    // die;
+    print_r($stepKNN);
+    die;
     //test prediction
     $classifier = new KNearestNeighbors(5, new Euclidean());
     $classifier->train($dataSample, $dataLabel);
