@@ -48,6 +48,7 @@ function addJadwal($data,$conn,$BASE_URL){
         $where = [
             'id_pengajuan' => $idPengajuan
         ];
+        
         update($dataUpdate,$where,'tb_pengajuan',$conn);
         $add = create($data,$conn,'tb_jadwal');
         if($add){

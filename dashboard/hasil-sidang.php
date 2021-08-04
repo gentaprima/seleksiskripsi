@@ -6,15 +6,16 @@
 <?php include '../proccess/crud.php' ?>
 <?php include '../proccess/hasil.php' ?>
 <?php
-$dataPengajuan = readDataAllRow($conn, "SELECT *,TB1.nama_pembimbing as penguji1,TB2.nama_pembimbing as penguji2 FROM tb_jadwal 
+$dataPengajuan = readDataAllRow($conn, "SELECT *,TB1.nama_pembimbing as penguji1,TB2.nama_pembimbing as penguji2, TB3.nama_pembimbing as pembimbing FROM tb_jadwal 
                                             JOIN tb_pengajuan ON tb_pengajuan.id_pengajuan = tb_jadwal.id_pengajuan
                                             JOIN tb_ruang ON tb_jadwal.id_ruang = tb_ruang.id_ruang
                                             JOIN tbl_judul_skripsi ON tb_pengajuan.id_judul = tbl_judul_skripsi.id_judul
                                             JOIN tbl_users ON tb_pengajuan.id_user = tbl_users.id_users
-                                            JOIN tb_pembimbing ON tb_pengajuan.id_pembimbing = tb_pembimbing.id_pembimbing
+                                            JOIN tb_pembimbing TB3 ON tb_pengajuan.id_pembimbing = TB3.id_pembimbing
                                             JOIN tb_pembimbing TB1 ON tb_ruang.dosen_1 = TB1.id_pembimbing
                                             JOIN tb_pembimbing TB2 ON tb_ruang.dosen_2 = TB2.id_pembimbing
                                             WHERE tb_pengajuan.status = 0 AND status_jadwal = 1 ORDER BY status_hasil");
+
 
 $dataRuang = readDataAllRow($conn, "SELECT * FROM tb_ruang");
 
@@ -23,8 +24,8 @@ if (isset($_POST['submit_add_hasil'])) {
     addHasil($_POST, $conn, $BASE_URL);
 }
 
-if(isset($_POST['submit_change_hasil'])){
-    changeHasil($_POST,$conn,$BASE_URL);
+if (isset($_POST['submit_change_hasil'])) {
+    changeHasil($_POST, $conn, $BASE_URL);
 }
 ?>
 
@@ -78,7 +79,7 @@ if(isset($_POST['submit_change_hasil'])){
                                     <td><?= $row['first_name'] ?> <?= $row['last_name'] ?></td>
                                     <td><?= $row['judul_skripsi'] ?></td>
                                     <td><?= $row['studi_kasus'] ?></td>
-                                    <td><?= $row['nama_pembimbing'] ?></td>
+                                    <td><?= $row['pembimbing'] ?></td>
                                     <td><?= date('d F Y', strtotime($row['tanggal'])) ?></td>
                                     <td><a target="_blank" href="<?= $BASE_URL ?>assets/proposal/<?= $row['proposal'] ?>"><span class="badge badge-success">Lihat Proposal</span></a></td>
                                     <td>
@@ -460,7 +461,7 @@ if(isset($_POST['submit_change_hasil'])){
         colSecond.appendChild(input);
         formGroup.appendChild(colFirst);
         formGroup.appendChild(colSecond);
-        $("#"+group).append(formGroup);
+        $("#" + group).append(formGroup);
     }
 
     function changeHasil(idPengajuan) {
@@ -475,10 +476,10 @@ if(isset($_POST['submit_change_hasil'])){
                 document.getElementById("id_pengajuan2").value = data[0].id_pengajuan
                 var html = `<div class="group>`;
                 $("#group2 div").remove();
-                let x= 0;
+                let x = 0;
                 let y = 0;
                 for (let i = 0; i < data.length; i++) {
-                    
+
                     var formGroup = document.createElement('div');
                     formGroup.setAttribute('class', 'form-group row mt-1');
                     var colFirst = document.createElement("label");
@@ -492,19 +493,20 @@ if(isset($_POST['submit_change_hasil'])){
                     input.setAttribute('name', 'revisi[]');
                     input.setAttribute('placeholder', '');
                     input.setAttribute('autocomplete', 'off');
-                    input.setAttribute('id','revisi_form'+i)
-                    
+                    input.setAttribute('id', 'revisi_form' + i)
+
                     colSecond.appendChild(input);
                     formGroup.appendChild(colFirst);
                     formGroup.appendChild(colSecond);
                     $("#group2").append(formGroup);
-                    document.getElementById("revisi_form"+x).value = data[y].revisi;
+                    document.getElementById("revisi_form" + x).value = data[y].revisi;
                     y++;
                     x++
                 }
             }
         })
     }
+
     function detailHasilSidang(idPengajuan) {
         $.ajax({
             type: "GET",
@@ -516,10 +518,10 @@ if(isset($_POST['submit_change_hasil'])){
                 document.getElementById("hasil_sidang").value = data[0].hasil
                 var html = `<div class="group>`;
                 $("#group3 div").remove();
-                let x= 0;
+                let x = 0;
                 let y = 0;
                 for (let i = 0; i < data.length; i++) {
-                    
+
                     var formGroup = document.createElement('div');
                     formGroup.setAttribute('class', 'form-group row mt-1');
                     var colFirst = document.createElement("label");
@@ -533,20 +535,18 @@ if(isset($_POST['submit_change_hasil'])){
                     input.setAttribute('name', 'revisi[]');
                     input.setAttribute('placeholder', '');
                     input.setAttribute('autocomplete', 'off');
-                    input.setAttribute('id','revisi'+i)
-                    
+                    input.setAttribute('id', 'revisi' + i)
+
                     colSecond.appendChild(input);
                     formGroup.appendChild(colFirst);
                     formGroup.appendChild(colSecond);
                     $("#group3").append(formGroup);
-                    document.getElementById("revisi"+x).value = data[y].revisi;
+                    document.getElementById("revisi" + x).value = data[y].revisi;
                     y++;
                     x++
                 }
             }
         })
     }
-
-    
 </script>
 <?php include '../components/footer.php' ?>
