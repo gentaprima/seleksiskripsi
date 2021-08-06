@@ -77,6 +77,14 @@ function active($currect_page)
             </a>
           </li>
           <li class="nav-item">
+            <a href="<?= $BASE_URL ?>dashboard/data-judul.php" class="nav-link <?php active("data-judul.php") ?>">
+              <i class="nav-icon fas fa-table"></i>
+              <p>
+                Data Judul Skripsi
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
             <a href="<?= $BASE_URL ?>dashboard/data-skripsi.php" class="nav-link <?php active("data-skripsi.php") ?>">
               <i class="nav-icon fas fa-table"></i>
               <p>
