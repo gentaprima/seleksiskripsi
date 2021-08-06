@@ -9,9 +9,11 @@
 <?php
 
 $dataSkripsi = null;
+$judulSkripsi = "";
 $percent = 0;
 if (isset($_POST['search'])) {
     $dataSkripsi = resultSearchWithPresentase($conn,$BASE_URL);
+    $judulSkripsi = $_POST['judul_skripsi'];
 }
 ?>
 <!-- Content Wrapper. Contains page content -->
@@ -45,13 +47,15 @@ if (isset($_POST['search'])) {
                         <h4 style="color:#002171;font-weight:bold;font-size:18px;width:100%;">Judul Skripsi apa yang ingin Anda Cari ?</h4>
                         <form action="cari-jurnal.php" method="post">
                             <div class="input-group mb-3 mt-3">
-                                <input required name="judul_skripsi" style="background-color: #f2f4f6;border: 0;" type="text" class="form-control" placeholder="Cari Jurnal" aria-label="Cari Jurnal" aria-describedby="basic-addon1">
+                                <input required name="judul_skripsi" value="<?= $judulSkripsi ?>" style="background-color: #f2f4f6;border: 0;" type="text" class="form-control" placeholder="Cari Jurnal" aria-label="Cari Jurnal" aria-describedby="basic-addon1">
                                 <div class="input-group-prepend">
                                     <button type="submit" name="search" style="background-color: #f2f4f6;border: 0;" class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></button>
                                 </div>
                             </div>
                         </form>
+
                         <?php if (!empty($dataSkripsi)) { ?>
+                            <a target="_blankg" href="<?= $BASE_URL ?>dashboard/perhitungan.php?value=<?= $judulSkripsi ?>" class="btn btn-outline-primary-2 mb-3">Lihat Perhitungan</a>
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>

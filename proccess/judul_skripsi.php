@@ -98,11 +98,12 @@ function showDistance($input, $judul, $sample, $allData)
         $distance['bobot_input'] = $input;
         array_push($result, $distance);
         $i+=1;
+
     }
     return $result;
 }
 
-function processMetode($conn, $input)
+function processMetode($conn, $input,$newTab = false)
 {
 
     $allData = fetchJudulSkripsi($conn, 0, fetchAllJudulSkripsi($conn));
@@ -121,18 +122,25 @@ function processMetode($conn, $input)
     //pembobotan text 
     $GLOBALS['vectorizer']->transform($input);
     $GLOBALS['transformer']->transform($input);
-    $stepKNN = showDistance($input, $_POST['judul_skripsi'], $dataSample, $allData);
-    usort($stepKNN, function ($a, $b) {
-        return   $a['jarak'] - $b['jarak'];
-    });
+    
     //perhitungan knn
-    // print_r($stepKNN);
-    // die;
+    if($newTab == true){
+        $stepKNN = showDistance($input, $_GET['value'], $dataSample, $allData);
+        usort($stepKNN, function ($a, $b) {
+            return   $a['jarak'] - $b['jarak'];
+        });
+        // print_r($stepKNN);
+        print_r(json_encode($stepKNN));
+        die;
+    }else{
+        $classifier = new KNearestNeighbors(5, new Euclidean());
+        $classifier->train($dataSample, $dataLabel);
+        $predict =  $classifier->predict($input)[0];
+        return $predict;
+    }
+    
     //test prediction
-    $classifier = new KNearestNeighbors(5, new Euclidean());
-    $classifier->train($dataSample, $dataLabel);
-    $predict =  $classifier->predict($input)[0];
-    return $predict;
+    
 }
 
 function searchJudulSkripsi($conn)
@@ -165,6 +173,41 @@ function resultSearchWithPresentase($conn, $BASE_URL)
         Redirect($BASE_URL . 'dashboard/cari-jurnal.php');
     }
 }
+
+// REVISI
+function resultSearchLink($conn,$BASE_URL,$value){
+    $resultSearch = searchJudulSkripsiNew($conn,$value);
+    // $search = $_POST['judul_skripsi'];
+    $search = $value;
+    $filtered = str_replace(' ', '', $search);
+    if ($filtered != null) {
+        foreach ($resultSearch as $key => $d) {
+            similar_text(str_replace(' ', '', strtolower($d['judul_skripsi'])), str_replace(' ', '', strtolower($_POST['judul_skripsi'])), $percent);;
+            $d['presentasi'] = (int) $percent;
+            $resultSearch[$key] = $d;
+        }
+        usort($resultSearch, function ($a, $b) {
+            return $b['presentasi'] - $a['presentasi'];
+        });
+        return $resultSearch;
+    } else {
+        $_SESSION['message'] = "Mohon maaf, Data tidak boleh kosong !";
+        $_SESSION['type'] = "error";
+        $_SESSION['title'] = "Warning";
+        Redirect($BASE_URL . 'dashboard/cari-jurnal.php');
+    }
+}
+
+function searchJudulSkripsiNew($conn,$value)
+{
+    // $input = [$_POST['judul_skripsi']];
+    $input = [$value];
+    $input = textPreprocessing($input);
+    $resultSearch = resultSearch($conn, processMetode($conn, $input,true));
+    return $resultSearch;
+}
+
+// REVISI
 
 
 
