@@ -6,14 +6,28 @@
 <?php include '../proccess/users.php' ?>
 <?php include '../proccess/crud.php' ?>
 <?php
-$dataJudul = readDataAllRow($conn, "SELECT * FROM tbl_judul_skripsi");
+mb_internal_encoding("8bit");
+require_once '../reader.php';
+
+// $dataJudul = readDataAllRow($conn, "SELECT * FROM tbl_judul_skripsi");
+
+if (isset($_POST['upload'])) {
+    $data = new Spreadsheet_Excel_Reader();
+
+    // Set output Encoding.
+    $data->setOutputEncoding('CP1251');
+
+    //$data->read('Excelreader/Excel/feed1.xls');
+    $data->read('../testdata.xls');
+    print_r($data);die;
+}
 
 if (isset($_POST['submit_update'])) {
     updateData($conn, $_POST, $BASE_URL);
 }
 
-if(isset($_GET['id'])){
-    deleteData($conn,$_GET['id'],$BASE_URL);
+if (isset($_GET['id'])) {
+    deleteData($conn, $_GET['id'], $BASE_URL);
 }
 ?>
 
@@ -45,7 +59,11 @@ if(isset($_GET['id'])){
                 <div class="col-12 bg-white shadow p-4">
                     <h4 class="color-primary text-bold">Data Judul Skripsi</h4>
                     <hr>
-                    <button class="btn btn-success">Import Judul</button>
+                    <form method="post" enctype="multipart/form-data">
+                        Pilih File:
+                        <input name="filejudul" type="file" required="required">
+                        <input class="btn btn-success" name="upload" type="submit" value="Import">
+                    </form>
                     <table id="example1" class="table table-bordered table-striped dataTable js-exportable " style="width: 100%;">
                         <thead>
                             <tr>
@@ -56,7 +74,7 @@ if(isset($_GET['id'])){
                             </tr>
                         </thead>
                         <tbody>
-                            <?php $i = 1;
+                            <!-- <?php $i = 1;
                             foreach ($dataJudul as $row) { ?>
                                 <tr>
                                     <td><?= $i++ ?>.</td>
@@ -73,13 +91,13 @@ if(isset($_GET['id'])){
                                                     <i class="fa fa-edit"></i></button>
                                             </span>
                                             <span class="ml-1" data-toggle="tooltip" data-toggle="tooltip" data-placement="top" title="Hapus Data">
-                                                <button  onClick="deleteData('<?= $BASE_URL ?>','<?= $row['id_users'] ?>')" data-toggle="modal" data-target="#modalDelete" type="button" class="btn btn-outline-danger btn-circle btn-icon btn-sm">
+                                                <button onClick="deleteData('<?= $BASE_URL ?>','<?= $row['id_users'] ?>')" data-toggle="modal" data-target="#modalDelete" type="button" class="btn btn-outline-danger btn-circle btn-icon btn-sm">
                                                     <i class="fa fa-trash"></i></button>
                                             </span>
                                         </div>
                                     </td>
                                 </tr>
-                            <?php } ?>
+                            <?php } ?> -->
                         </tbody>
 
                     </table>
@@ -270,17 +288,18 @@ if(isset($_GET['id'])){
         document.getElementById("id_users").value = idUsers;
     }
 
-    function deleteData(BASE_URL,idUsers){
-        document.getElementById('delete_id').href = BASE_URL +'dashboard/data-mahasiswa.php?id='+idUsers;
+    function deleteData(BASE_URL, idUsers) {
+        document.getElementById('delete_id').href = BASE_URL + 'dashboard/data-mahasiswa.php?id=' + idUsers;
     }
-    function detailMahasiswa(BASE_URL,firstName,lastName,jk,angkatan,id_users,image,address,semester,email,nim){
-        if(image == ''){
+
+    function detailMahasiswa(BASE_URL, firstName, lastName, jk, angkatan, id_users, image, address, semester, email, nim) {
+        if (image == '') {
             document.getElementById("image_users").src = BASE_URL + 'assets/image/user.png';
-        }else{
-            document.getElementById("image_users").src = BASE_URL + 'assets/image/'+image;
+        } else {
+            document.getElementById("image_users").src = BASE_URL + 'assets/image/' + image;
         }
         document.getElementById("nim_detail").innerHTML = ": " + nim;
-        document.getElementById("full_name").innerHTML = ": " + firstName+' ' + lastName;
+        document.getElementById("full_name").innerHTML = ": " + firstName + ' ' + lastName;
         document.getElementById("jk_detail").innerHTML = ": " + jk;
         document.getElementById("semester_detail").innerHTML = ": " + semester;
         document.getElementById("angkatan_detail").innerHTML = ": " + angkatan;

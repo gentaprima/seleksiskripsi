@@ -2,6 +2,7 @@
     "require": {
         "sastrawi/sastrawi": "1.2.0",
         "functional-php/pattern-matching": "^0.3.1",
-        "php-ai/php-ml": "^0.9.0"
+        "php-ai/php-ml": "^0.9.0",
+        "gregwar/captcha-bundle": "^2.1"
     }
 }

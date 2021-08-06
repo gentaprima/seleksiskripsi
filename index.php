@@ -3,13 +3,39 @@
 <?php include 'config/database.php' ?>
 <?php include 'proccess/users.php' ?>
 <?php
-if (isset($_POST['submit'])) {
-  proccessLogin($_POST, $conn, $BASE_URL);
-}
+require_once $_SERVER['DOCUMENT_ROOT'] . '/seleksiskripsi/vendor/autoload.php';
+use Gregwar\Captcha\CaptchaBuilder;
+
+$builder = new CaptchaBuilder;
+$builder
+    ->build()
+    ->save('out.jpg')
+;
+$_SESSION['phrase'] = $builder->getPhrase();
+
+// if (isset($_POST['submit'])) {
+//   $_SESSION['phrase'] = $builder->getPhrase();
+//   $userInput = $_POST['captcha'];
+//   if($builder->testPhrase($userInput)) {
+//     proccessLogin($_POST, $conn, $BASE_URL);
+//   }
+//   else {
+//     // user phrase is wrong
+//     $_SESSION['message'] = "Mohon maaf, Captcha yang anda input tidak cocok !";
+//     $_SESSION['type'] = "error";
+//     $_SESSION['title'] = "Warning";
+//     header("Location: " . $BASE_URL);
+//     exit();
+//   }
+// }
 if(isset($_SESSION['users_data'])){
   $link = $BASE_URL.'dashboard';
   Redirect($link);
 }
+
+
+
+
 ?>
 <html lang="en">
 
@@ -26,6 +52,11 @@ if(isset($_SESSION['users_data'])){
   <link rel="stylesheet" href="<?= $BASE_URL ?>assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="<?= $BASE_URL ?>assets/dist/css/adminlte.min.css">
+  <style>
+    .captcha:hover{
+      cursor: pointer;
+    }
+  </style>
 </head>
 
 <body class="login-page" style="min-height: 496.391px;">
@@ -38,7 +69,7 @@ if(isset($_SESSION['users_data'])){
       <div class="card-body login-card-body">
         <p class="login-box-msg">Silahkan Login terlebih dahulu !</p>
 
-        <form action="" method="post">
+        <form action="<?= $BASE_URL ?>proccess/proses_login.php" method="post">
           <div class="input-group mb-3">
             <input type="email" class="form-control" name="email" placeholder="Email">
             <div class="input-group-append">
@@ -53,6 +84,14 @@ if(isset($_SESSION['users_data'])){
               <div class="input-group-text">
                 <span class="fas fa-lock"></span>
               </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-6" class="captcha">
+              <img id="captcha" class="captcha" onclick="readCaptcha('<?= $BASE_URL ?>')" src="<?php echo $builder->inline(); ?>" />
+            </div>
+            <div class="col-6">
+              <input type="text" class="form-control" name="captcha" placeholder="Captcha">
             </div>
           </div>
           <div class="row">
@@ -107,7 +146,19 @@ if(isset($_SESSION['users_data'])){
       });
     }
   </script>
-
+  <script>
+    function readCaptcha(base_url){
+      $.ajax({
+        type : "GET",
+        dataType : 'html',
+        url : base_url + 'proccess/image_ajax.php',
+        success : function(response){
+          let data = JSON.parse(response);
+          document.getElementById('captcha').src = data
+        }
+      })
+    }
+  </script>
 </body>
 
 </html>

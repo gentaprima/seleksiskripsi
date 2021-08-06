@@ -96,7 +96,9 @@ if ($_SESSION == null) {
       background-color: #f2f4f6;
       border: 0;
     }
-
+    .captcha:hover{
+      cursor: pointer;
+    }
 
   </style>
 </head>
