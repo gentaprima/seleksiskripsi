@@ -4,22 +4,36 @@
 <?php include '../components/navbar.php' ?>
 <?php include '../components/sidebar.php' ?>
 <?php include '../proccess/users.php' ?>
-<?php include '../proccess/crud.php' ?>
 <?php
-mb_internal_encoding("8bit");
-require_once '../reader.php';
+require '../vendor/autoload.php';
+include '../proccess/judul_skripsi.php';
 
-// $dataJudul = readDataAllRow($conn, "SELECT * FROM tbl_judul_skripsi");
+
+$dataJudul = readDataAllRow($conn, "SELECT * FROM tbl_judul_skripsi");
 
 if (isset($_POST['upload'])) {
-    $data = new Spreadsheet_Excel_Reader();
+    $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+    $spreadSheet = $reader->load($_FILES['filejudul']['tmp_name']);
+    $excelSheet = $spreadSheet->getActiveSheet();
+    $spreadSheetAry = $excelSheet->toArray();
 
-    // Set output Encoding.
-    $data->setOutputEncoding('CP1251');
-
-    //$data->read('Excelreader/Excel/feed1.xls');
-    $data->read('../testdata.xls');
-    print_r($data);die;
+    $sql = "";
+    foreach ($spreadSheetAry as $key => $title) {
+        if ($key != 0) {
+            $preprocessing = textPreprocessing(array($title[0]));
+            $resultPreprocessing = $preprocessing[0];
+            $titleStr = $title[0];
+            $label = $title[1];
+            $sql .= "INSERT INTO tbl_judul_skripsi (judul_skripsi,text_preprocessing,label) VALUES ('$titleStr','$resultPreprocessing','$label');";
+            
+        }
+    }
+    if ($conn->multi_query($sql) === TRUE) {
+        $_SESSION['message'] = "Berhasil Import Data Judul Skripsi";
+        $_SESSION['type'] = "success";
+        $_SESSION['title'] = "Berhasil";
+        Redirect($BASE_URL.'dashboard/data-judul.php');
+    }
 }
 
 if (isset($_POST['submit_update'])) {
@@ -70,34 +84,20 @@ if (isset($_GET['id'])) {
                                 <th>No</th>
                                 <th>Judul Skripsi</th>
                                 <th>Text Preprocessing</th>
-                                <th>Action</th>
+                                <th>Label</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- <?php $i = 1;
+                            <?php $i = 1;
                             foreach ($dataJudul as $row) { ?>
                                 <tr>
                                     <td><?= $i++ ?>.</td>
                                     <td><?= $row['judul_skripsi'] ?> </td>
                                     <td><?= $row['text_preprocessing'] ?></td>
-                                    <td>
-                                        <div class="d-flex justify-content-center">
-                                            <span data-toggle="tooltip" data-toggle="tooltip" data-placement="top" title="Lihat Detail">
-                                                <button onClick="detailMahasiswa('<?= $BASE_URL ?>','<?= $row['first_name'] ?>','<?= $row['last_name'] ?>','<?= $row['jk'] ?>','<?= $row['angkatan'] ?>','<?= $row['id_users'] ?>','<?= $row['image'] ?>','<?= $row['address'] ?>','<?= $row['semester'] ?>','<?= $row['email'] ?>','<?= $row['nim'] ?>')" data-toggle="modal" data-target="#modalDetail" type="button" class="btn btn-outline-primary-2 btn-circle btn-icon btn-sm">
-                                                    <i class="fa fa-table"></i></button>
-                                            </span>
-                                            <span class="ml-1" data-toggle="tooltip" data-toggle="tooltip" data-placement="top" title="Ubah Data">
-                                                <button onClick="updateDataMahasiswa('<?= $BASE_URL ?>','<?= $row['first_name'] ?>','<?= $row['last_name'] ?>','<?= $row['jk'] ?>','<?= $row['angkatan'] ?>','<?= $row['id_users'] ?>')" data-toggle="modal" data-target="#modalEdit" type="button" class="btn btn-outline-info btn-circle btn-icon btn-sm">
-                                                    <i class="fa fa-edit"></i></button>
-                                            </span>
-                                            <span class="ml-1" data-toggle="tooltip" data-toggle="tooltip" data-placement="top" title="Hapus Data">
-                                                <button onClick="deleteData('<?= $BASE_URL ?>','<?= $row['id_users'] ?>')" data-toggle="modal" data-target="#modalDelete" type="button" class="btn btn-outline-danger btn-circle btn-icon btn-sm">
-                                                    <i class="fa fa-trash"></i></button>
-                                            </span>
-                                        </div>
-                                    </td>
+                                    <td><?= $row['label'] ?></td>
+
                                 </tr>
-                            <?php } ?> -->
+                            <?php } ?>
                         </tbody>
 
                     </table>
@@ -133,7 +133,6 @@ if (isset($_GET['id'])) {
                         <div class="col-sm-10">
                             <div class="input-group">
                                 <input name="last_name" id="last_name" style="background-color: #f2f4f6;border: 0;" type="text" class="form-control" placeholder="Nama Belakang" a>
-
                             </div>
                         </div>
                     </div>
@@ -279,32 +278,4 @@ if (isset($_GET['id'])) {
         </div>
     </div>
 </div>
-<script>
-    function updateDataMahasiswa(BASE_URL, firstName, lastName, jk, angkatan, idUsers) {
-        document.getElementById("first_name").value = firstName;
-        document.getElementById("last_name").value = lastName;
-        document.getElementById("jk").value = jk;
-        document.getElementById("angkatan").value = angkatan;
-        document.getElementById("id_users").value = idUsers;
-    }
-
-    function deleteData(BASE_URL, idUsers) {
-        document.getElementById('delete_id').href = BASE_URL + 'dashboard/data-mahasiswa.php?id=' + idUsers;
-    }
-
-    function detailMahasiswa(BASE_URL, firstName, lastName, jk, angkatan, id_users, image, address, semester, email, nim) {
-        if (image == '') {
-            document.getElementById("image_users").src = BASE_URL + 'assets/image/user.png';
-        } else {
-            document.getElementById("image_users").src = BASE_URL + 'assets/image/' + image;
-        }
-        document.getElementById("nim_detail").innerHTML = ": " + nim;
-        document.getElementById("full_name").innerHTML = ": " + firstName + ' ' + lastName;
-        document.getElementById("jk_detail").innerHTML = ": " + jk;
-        document.getElementById("semester_detail").innerHTML = ": " + semester;
-        document.getElementById("angkatan_detail").innerHTML = ": " + angkatan;
-        document.getElementById("email_detail").innerHTML = ": " + email;
-        document.getElementById("alamat_detail").innerHTML = ": " + address;
-    }
-</script>
 <?php include '../components/footer.php' ?>

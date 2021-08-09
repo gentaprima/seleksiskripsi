@@ -1,7 +1,5 @@
 <?php
 
-
-
 function addData($data, $conn, $BASE_URL){
     $firstName = $data['first_name'];
     $lastName = $data['last_name'];

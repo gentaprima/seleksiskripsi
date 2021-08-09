@@ -97,13 +97,12 @@ function showDistance($input, $judul, $sample, $allData)
         $distance['jarak'] = $euclidean->distance($input[0], $dt);
         $distance['bobot_input'] = $input;
         array_push($result, $distance);
-        $i+=1;
-
+        $i += 1;
     }
     return $result;
 }
 
-function processMetode($conn, $input,$newTab = false)
+function processMetode($conn, $input, $newTab = false)
 {
 
     $allData = fetchJudulSkripsi($conn, 0, fetchAllJudulSkripsi($conn));
@@ -122,9 +121,9 @@ function processMetode($conn, $input,$newTab = false)
     //pembobotan text 
     $GLOBALS['vectorizer']->transform($input);
     $GLOBALS['transformer']->transform($input);
-    
+
     //perhitungan knn
-    if($newTab == true){
+    if ($newTab == true) {
         $stepKNN = showDistance($input, $_GET['value'], $dataSample, $allData);
         usort($stepKNN, function ($a, $b) {
             return   $a['jarak'] - $b['jarak'];
@@ -132,15 +131,15 @@ function processMetode($conn, $input,$newTab = false)
         // print_r($stepKNN);
         print_r(json_encode($stepKNN));
         die;
-    }else{
+    } else {
         $classifier = new KNearestNeighbors(5, new Euclidean());
         $classifier->train($dataSample, $dataLabel);
         $predict =  $classifier->predict($input)[0];
         return $predict;
     }
-    
+
     //test prediction
-    
+
 }
 
 function searchJudulSkripsi($conn)
@@ -175,8 +174,9 @@ function resultSearchWithPresentase($conn, $BASE_URL)
 }
 
 // REVISI
-function resultSearchLink($conn,$BASE_URL,$value){
-    $resultSearch = searchJudulSkripsiNew($conn,$value);
+function resultSearchLink($conn, $BASE_URL, $value)
+{
+    $resultSearch = searchJudulSkripsiNew($conn, $value);
     // $search = $_POST['judul_skripsi'];
     $search = $value;
     $filtered = str_replace(' ', '', $search);
@@ -198,12 +198,12 @@ function resultSearchLink($conn,$BASE_URL,$value){
     }
 }
 
-function searchJudulSkripsiNew($conn,$value)
+function searchJudulSkripsiNew($conn, $value)
 {
     // $input = [$_POST['judul_skripsi']];
     $input = [$value];
     $input = textPreprocessing($input);
-    $resultSearch = resultSearch($conn, processMetode($conn, $input,true));
+    $resultSearch = resultSearch($conn, processMetode($conn, $input, true));
     return $resultSearch;
 }
 
@@ -214,7 +214,9 @@ function searchJudulSkripsiNew($conn,$value)
 function addDataSkripsi($conn, $BASE_URL, $id_user)
 {
 
+
     $input = [$_POST['judul_skripsi']];
+
     $input = textPreprocessing($input);
     $textPreprocessing = $input[0];
     $predict = processMetode($conn, $input);
@@ -236,7 +238,6 @@ function addDataSkripsi($conn, $BASE_URL, $id_user)
         $fileTmp = $_FILES['proposal']['tmp_name'];
         $locationUpload = '../assets/proposal/';
         if (!empty($_POST['judul_skripsi']) && !empty($_POST['studi_kasus']) && !empty($_POST['angkatan']) && !empty($_POST['pembimbing']) && !empty($fileProposal)) {
-            print("data ga koosong");
             $fileProposal = $id_user . "-proposal" . $fileProposal;
             if (in_array($extension, $allowExt) == true) {
                 move_uploaded_file($fileTmp, $locationUpload . $fileProposal);
@@ -281,6 +282,19 @@ function addDataSkripsi($conn, $BASE_URL, $id_user)
         $_SESSION['message'] = "Mohon maaf, Judul skripsi anda tidak diterima oleh sistem. silahkan cek di cari jurnal";
         $_SESSION['type'] = "error";
         $_SESSION['title'] = "Warning";
+        $query = "SELECT * FROM tb_saran";
+        $execQuery = mysqli_query($conn, $query);
+        $saran = mysqli_fetch_all($execQuery, MYSQLI_ASSOC);
+        foreach ($saran as $key => $sa) {
+            similar_text(str_replace(' ', '', strtolower($sa['judul_skripsi'])), str_replace(' ', '', strtolower($_POST['judul_skripsi'])), $percent);;
+            $sa['percent'] = (int) $percent;
+            $saran[$key] = $sa;
+        }
+        usort($saran, function ($item1, $item2) {
+            return $item2['percent'] <=> $item1['percent'];
+        });
+        
+        $_SESSION['saran'] = $saran[0];
         Redirect($BASE_URL . 'dashboard/daftar-skripsi.php');
         return $dataPersentaseMirip;
     }

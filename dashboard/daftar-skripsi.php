@@ -8,7 +8,6 @@
 <?php include '../proccess/pembimbing.php' ?>
 <?php include '../proccess/pengajuan.php' ?>
 <?php
-
 $dataPembimbing = fetchPembimbing($conn);
 $emailUsers = $_SESSION['users_data']['email'];
 $dataUsers = getDataRow("SELECT * FROM tbl_users WHERE email = '$emailUsers'", $conn);
@@ -69,6 +68,9 @@ $tab1 = "";
                                     <div class="col-12">
                                         <div class="pl-5 pr-5 pt-2 pb-2">
                                             <h4 style="color:#002171;font-weight:bold;font-size:18px;width:100%;">Silahkan Daftar Skripsi disini </h4>
+                                            <?php if (isset($_SESSION['saran'])) { ?>
+                                                <span class="text-success text-bold">Saran Judul : <?= $_SESSION['saran']['judul_skripsi'] ?> </span>
+                                            <?php } ?>
                                             <form action="daftar-skripsi.php" method="post" enctype="multipart/form-data">
                                                 <div class="input-group mb-3 mt-3">
                                                     <input name="judul_skripsi" style="background-color: #f2f4f6;border: 0;" type="text" class="form-control" placeholder="Judul Skripsi" aria-label="Judul" aria-describedby="basic-addon1">
@@ -214,4 +216,6 @@ $tab1 = "";
 
 </div>
 <!-- /.content-wrapper -->
-<?php include '../components/footer.php' ?>
+<?php 
+unset($_SESSION['saran']);
+include '../components/footer.php' ?>
